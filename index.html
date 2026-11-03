@@ -1,0 +1,974 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>PBO Belajar</title>
+<style>
+:root{color-scheme:dark;--bg:#000000;--bg2:#0C0C0C;--card:#0C0C0C;--card2:#1A1A1A;--line:#262626;--text:#F5F5F5;--muted:#9B9B9B;--pink:#FFFFFF;--hot:#FFFFFF;--ok:#FFFFFF;--bad:#8C8C8C;--warn:#BDBDBD;--r:18px;--shadow:none;--ease:cubic-bezier(.2,.8,.2,1)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--text);font:16px/1.7 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg)}
+a{color:var(--pink);text-decoration:none}
+h1,h2,h3,h4{line-height:1.25;margin:0 0 .5em}
+h1{font-size:1.7rem}h2{font-size:1.3rem;margin-top:1.8em}h3{font-size:1.1rem;margin-top:1.5em;color:var(--pink)}
+p{margin:.6em 0}
+ul,ol{padding-left:1.25em;margin:.5em 0}li{margin:.3em 0}
+code{font:.88em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#1A1A1A;color:var(--pink);padding:.1em .4em;border-radius:6px}
+.app{display:flex;min-height:100vh}
+aside{width:290px;position:fixed;inset:0 auto 0 0;background:rgba(0,0,0,.98);backdrop-filter:blur(14px);border-right:1px solid var(--line);padding:20px 14px 30px;overflow:auto;transform:translateX(-102%);transition:transform .38s var(--ease);z-index:60}
+.open aside{transform:none}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.55);opacity:0;pointer-events:none;transition:opacity .3s;z-index:55}
+.open .scrim{opacity:1;pointer-events:auto}
+.brand{display:flex;gap:12px;align-items:center;padding:6px 8px 18px}
+.logo{width:42px;height:42px;border-radius:13px;background:var(--hot);display:grid;place-items:center;font-weight:800;color:#000;font-size:15px}
+.brand b{display:block;font-size:1.05rem}.brand small{color:var(--muted)}
+.nav a{display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:12px;color:var(--text);margin:2px 0;transition:.2s}
+.nav a:hover{background:var(--card)}
+.nav a.on{background:var(--card);box-shadow:inset 3px 0 var(--hot)}
+.nav .sec{font-size:.72rem;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin:16px 12px 6px}
+.nav .tick{margin-left:auto;color:var(--ok);font-size:.9rem}
+main{flex:1;min-width:0;padding-bottom:96px}
+.top{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(0,0,0,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.menuBtn{background:var(--card);border:1px solid var(--line);color:var(--text);width:40px;height:40px;border-radius:12px;font-size:18px;cursor:pointer}
+.top .tt{font-weight:700;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini{width:110px;height:8px;border-radius:9px;background:var(--card);overflow:hidden}
+.mini i{display:block;height:100%;background:var(--hot);border-radius:9px;transition:width .6s var(--ease)}
+#view{max-width:860px;margin:0 auto;padding:22px 16px}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.bottom{position:fixed;left:0;right:0;bottom:0;z-index:45;display:flex;background:rgba(0,0,0,.96);backdrop-filter:blur(16px);border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
+.bottom a{flex:1;text-align:center;color:var(--muted);font-size:.7rem;padding:6px 2px;border-radius:12px;transition:.2s}
+.bottom a span{display:block;font-size:1.25rem;line-height:1.2}
+.bottom a.on{color:var(--text);background:#1A1A1A}
+@media(min-width:960px){aside{transform:none}main{margin-left:290px}.menuBtn,.bottom,.scrim{display:none}.mini{width:180px}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow);margin:14px 0}
+.hero{background:var(--card2);display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.hero .tx{flex:1;min-width:200px}
+.ring{position:relative;width:118px;height:118px;flex:none}
+.ring svg{transform:rotate(-90deg)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:1.5rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.grid .card{margin:0}
+.tile{display:block;color:var(--text);transition:.25s var(--ease)}
+.tile:hover{transform:translateY(-3px);border-color:var(--pink)}
+.tile .ic{font-size:1.7rem}.tile h3{margin:.3em 0 .2em;color:var(--text)}.tile p{color:var(--muted);font-size:.92rem;margin:0}
+.pill{display:inline-block;font-size:.75rem;padding:2px 10px;border-radius:99px;background:#1A1A1A;color:var(--pink);margin-right:6px}
+.pill.ok{background:#1A1A1A;color:var(--ok)}
+.stat{text-align:center}.stat b{display:block;font-size:1.6rem;color:var(--pink)}.stat span{color:var(--muted);font-size:.85rem}
+.btn{display:inline-flex;align-items:center;gap:8px;border:0;background:var(--hot);color:#000;font:700 .95rem inherit;font-family:inherit;padding:11px 20px;border-radius:13px;cursor:pointer;transition:.2s var(--ease)}
+.btn:hover{transform:translateY(-2px)}.btn:active{transform:scale(.97)}
+.btn.ghost{background:var(--card);color:var(--text);box-shadow:none;border:1px solid var(--line)}
+.btn.sm{padding:7px 14px;font-size:.85rem}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.callout{border-radius:14px;padding:12px 14px;margin:14px 0;border:1px solid var(--line);border-left-width:4px}
+.callout.tip{background:#1A1A1A;border-left-color:var(--ok)}
+.callout.warn{background:#101010;border-left-color:var(--warn)}
+.callout.key{background:#1A1A1A;border-left-color:var(--hot)}
+.callout b.t{display:block;margin-bottom:2px}
+pre.code{background:#1E1E1E;border:1px solid var(--line);border-radius:14px;padding:14px;overflow:auto;font:13px/1.65 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;margin:12px 0;color:#D4D4D4;-webkit-overflow-scrolling:touch}
+pre.code code{background:none;padding:0;border-radius:0;color:inherit;font:inherit}
+pre.code i{font-style:normal}
+pre.code .c{color:#6A9955;font-style:italic}pre.code .s{color:#CE9178}pre.code .n{color:#B5CEA8}pre.code .a{color:#DCDCAA}
+pre.code .kc{color:#C586C0}pre.code .kw{color:#569CD6}pre.code .t{color:#4EC9B0}pre.code .f{color:#DCDCAA}
+.tw{overflow:auto;margin:12px 0;border:1px solid var(--line);border-radius:14px}
+table{border-collapse:collapse;width:100%;font-size:.92rem;min-width:420px}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--card2);color:var(--text);font-weight:700}
+tr:last-child td{border-bottom:0}
+.q{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin:14px 0}
+.qn{font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--hot);font-weight:700}
+.qt{font-weight:600;margin:.3em 0}
+.opt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);color:var(--text);padding:11px 13px;border-radius:14px;margin-top:8px;font:inherit;cursor:pointer;transition:.22s var(--ease)}
+.opt b{width:26px;height:26px;border-radius:8px;background:var(--card2);display:grid;place-items:center;flex:none;font-size:.8rem}
+.opt:hover{border-color:var(--pink);transform:translateY(-1px)}
+.opt.sel{border-color:var(--hot);background:#1A1A1A}
+.opt.ok{border-color:var(--ok);background:#1A1A1A}
+.opt.bad{border-color:var(--bad);border-style:dashed;background:#101010}
+.opt[disabled]{cursor:default;transform:none}
+.exp{display:none;margin-top:12px;padding:12px 14px;border-radius:12px;background:#1A1A1A;border:1px dashed #444;font-size:.94rem}
+.exp.show{display:block;animation:fade .35s}
+.crumb{color:var(--muted);font-size:.85rem;margin-bottom:6px}
+.blank{background:#1A1A1A;border:1px dashed var(--hot);color:var(--text);border-radius:7px;padding:1px 7px;font:inherit;outline:0;max-width:100%}
+.blank:focus{border-style:solid;box-shadow:0 0 0 3px rgba(255,255,255,.25)}
+.blank.ok{border-color:var(--ok);background:#1A1A1A}.blank.bad{border-color:var(--bad);background:#101010}
+textarea{width:100%;min-height:130px;background:#000;border:1px solid var(--line);border-radius:14px;color:var(--text);padding:12px;font:14px/1.6 ui-monospace,Menlo,Consolas,monospace;resize:vertical;outline:0}
+textarea:focus{border-color:var(--hot)}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+.chip{background:var(--card);border:1px solid var(--line);color:var(--text);padding:9px 14px;border-radius:12px;font:14px ui-monospace,Menlo,Consolas,monospace;cursor:pointer;transition:.2s var(--ease)}
+.chip:hover{border-color:var(--pink)}.chip.sel{border-color:var(--hot);background:#1A1A1A}
+.chip.ok{border-color:var(--ok);background:#1A1A1A}.chip.bad{border-color:var(--bad);background:#101010}
+.seg{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.seg button{flex:1;min-width:90px;background:var(--card);border:1px solid var(--line);color:var(--text);padding:9px;border-radius:12px;font:inherit;cursor:pointer;transition:.2s}
+.seg button:hover{border-color:var(--pink)}.seg button.ok{border-color:var(--ok);background:#1A1A1A}.seg button.bad{border-color:var(--bad);background:#101010}
+.nums{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.nums button{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text);cursor:pointer;font:inherit;font-size:.85rem}
+.nums button.cur{border-color:var(--hot);background:#1A1A1A}.nums button.done{background:var(--card2)}
+.timer{font:700 1.1rem ui-monospace,Menlo,monospace;color:var(--warn)}
+.flash{perspective:900px;height:230px;cursor:pointer;margin:16px 0}
+.flash .in{position:relative;height:100%;transition:transform .6s var(--ease);transform-style:preserve-3d}
+.flash.flip .in{transform:rotateY(180deg)}
+.flash .f{position:absolute;inset:0;backface-visibility:hidden;border-radius:var(--r);display:grid;place-items:center;text-align:center;padding:22px;border:1px solid var(--line);box-shadow:var(--shadow);font-size:1.1rem}
+.flash .f1{background:var(--card2)}
+.flash .f2{background:var(--card);border-color:var(--hot);transform:rotateY(180deg);font-size:1rem}
+.nav2{display:flex;justify-content:space-between;gap:10px;margin-top:26px;flex-wrap:wrap}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:560px){.cmp{grid-template-columns:1fr}}
+.st{font-weight:700}.st.ok{color:var(--ok)}.st.bad{color:var(--bad)}.st.mid{color:var(--warn)}
+.muted{color:var(--muted)}
+.i{width:1.2em;height:1.2em;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.2em;flex:none}
+.nav a span{display:inline-flex}.nav a .i{width:20px;height:20px}
+.bottom a .i{width:22px;height:22px;display:block;margin:0 auto 2px}
+.tile .ic .i{width:30px;height:30px;color:var(--hot)}
+h1 .i{width:1.05em;height:1.05em;color:var(--hot);margin-right:4px}
+.menuBtn{display:grid;place-items:center}.menuBtn .i{width:20px;height:20px}
+
+/* splash */
+#splash{position:fixed;inset:0;z-index:999;background:#000;display:grid;place-items:center;cursor:pointer;transition:opacity .9s var(--ease),visibility .9s}
+#splash.out{opacity:0;visibility:hidden;pointer-events:none}
+#splash.out .sp-in{opacity:0;transform:translateY(-12px) scale(.98);transition:transform .9s var(--ease),opacity .6s ease}
+.sp-in{display:flex;flex-direction:column;align-items:center;padding:20px}
+.sp-mark{width:68px;height:68px;fill:none;stroke:#fff;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+.sp-mark{animation:hop .7s var(--ease) 1.6s both,pulse .9s var(--ease) 3.05s both}
+.sp-mark path{stroke-dasharray:1;stroke-dashoffset:1;transform-box:view-box;transform-origin:32px 21px}
+.sp-mark .r{animation:draw 1.2s cubic-bezier(.65,0,.35,1) .2s forwards,morph .9s cubic-bezier(.65,0,.2,1) 2.0s forwards}
+.sp-mark .m2{animation:draw 1.2s cubic-bezier(.65,0,.35,1) .55s forwards,undraw .6s cubic-bezier(.65,0,.35,1) 1.85s forwards}
+.sp-mark .m3{animation:draw 1.2s cubic-bezier(.65,0,.35,1) .9s forwards,undraw .5s cubic-bezier(.65,0,.35,1) 1.75s forwards}
+.sp-mark .c1{animation:draw .5s cubic-bezier(.65,0,.35,1) 2.6s forwards}
+.sp-mark .c2{animation:draw .6s cubic-bezier(.65,0,.35,1) 2.8s forwards}
+.sp-name{display:flex;margin-top:30px;font:800 2.6rem/1 ui-rounded,"SF Pro Rounded","Nunito","Varela Round","Quicksand",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:-.01em;color:#fff}
+.sp-name span{display:inline-block;opacity:0;transform:translateY(26px) scale(.3) rotate(-14deg);animation:popin .7s cubic-bezier(.34,1.56,.64,1) forwards,bob 2.2s ease-in-out infinite;animation-delay:calc(3.2s + var(--i)*80ms),calc(4.3s + var(--i)*90ms)}
+.sp-name .p{color:#fff;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-weight:800;letter-spacing:-.04em}
+.sp-line{width:180px;height:1px;background:#262626;margin:32px 0 18px;position:relative;overflow:hidden;opacity:0;animation:fadein .8s ease 3.7s forwards}
+.sp-line i{position:absolute;inset:0;background:#fff;transform:scaleX(0);transform-origin:left;animation:fill 1.4s cubic-bezier(.65,0,.35,1) 3.9s forwards}
+.sp-cap{font:500 .68rem/1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.3em;margin:0 -.3em 0 0;text-transform:uppercase;color:#9B9B9B;opacity:0;animation:fadein .8s ease 4.0s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes undraw{from{stroke-dashoffset:0}to{stroke-dashoffset:-1}}
+@keyframes morph{0%{transform:none;stroke-width:1.5}100%{transform:translate(-14px,11px) rotate(-90deg) scale(.5);stroke-width:3}}
+@keyframes hop{0%,100%{transform:translateY(0) scale(1)}40%{transform:translateY(-7px) scale(1.07)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12);filter:drop-shadow(0 0 10px rgba(255,255,255,.55))}}
+@keyframes fadein{to{opacity:1}}
+@keyframes popin{to{opacity:1;transform:none}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes reveal{to{opacity:1;filter:blur(0);transform:none}}
+@keyframes fill{to{transform:scaleX(1)}}
+/* smooth ui */
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(1)}45%{transform:scale(1.025)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+#view.stag>*{animation:rise .55s var(--ease) both;animation-delay:calc(var(--n,0)*55ms)}
+#view.stag .grid>*{animation:rise .5s var(--ease) both}
+#view.stag .grid>*:nth-child(1){animation-delay:.1s}#view.stag .grid>*:nth-child(2){animation-delay:.16s}#view.stag .grid>*:nth-child(3){animation-delay:.22s}#view.stag .grid>*:nth-child(4){animation-delay:.28s}#view.stag .grid>*:nth-child(5){animation-delay:.34s}#view.stag .grid>*:nth-child(6){animation-delay:.4s}#view.stag .grid>*:nth-child(7){animation-delay:.46s}#view.stag .grid>*:nth-child(8){animation-delay:.52s}
+.opt.ok{animation:pop .4s var(--ease)}.opt.bad{animation:shake .4s var(--ease)}
+.i{transition:transform .3s var(--ease)}
+.bottom a.on .i{transform:translateY(-2px) scale(1.08)}
+.nav a:hover .i{transform:scale(1.12)}
+.card,.q,.chip,.blank,.seg button,.nums button{transition:transform .25s var(--ease),border-color .25s,background .25s,box-shadow .25s}
+.nums button:active,.chip:active,.seg button:active{transform:scale(.94)}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div id="splash" role="status" aria-label="Memuat"><div class="sp-in"><svg class="sp-mark" viewBox="0 0 64 64" aria-hidden="true"><path class="r" pathLength="1" d="M8 31L32 11l24 20"/><path class="m2" pathLength="1" d="M14 27v27h36V27"/><path class="m3" pathLength="1" d="M27 54V40h10v14"/><path class="c1" pathLength="1" d="M35 18L29 46"/><path class="c2" pathLength="1" d="M41 20l11 12-11 12"/></svg><div class="sp-name"><span class="" style="--i:0">o</span><span class="" style="--i:1">m</span><span class="" style="--i:2">a</span><span class="" style="--i:3">h</span><span class="p" style="--i:4">c</span><span class="p" style="--i:5">o</span><span class="p" style="--i:6">d</span><span class="p" style="--i:7">i</span><span class="p" style="--i:8">n</span><span class="p" style="--i:9">g</span></div><div class="sp-line"><i></i></div><p class="sp-cap">Menyiapkan materi PBO</p></div></div>
+<div class="app" id="app">
+  <aside><div class="brand"><div class="logo">PBO</div><div><b>PBO Belajar</b><small>Java &middot; Close Book</small></div></div><nav class="nav" id="nav"></nav></aside>
+  <div class="scrim" id="scrim"></div>
+  <main>
+    <header class="top"><button class="menuBtn" id="menuBtn" aria-label="Menu"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="tt" id="ttl">Beranda</div><div class="mini"><i id="miniBar" style="width:0"></i></div></header>
+    <div id="view"></div>
+  </main>
+  <nav class="bottom" id="bottom">
+    <a href="#home"><span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg></span>Beranda</a>
+    <a href="#materi"><span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6a3 3 0 013 3v13a2 2 0 00-2-2H4z"/><path d="M20 4h-6a3 3 0 00-3 3v13a2 2 0 012-2h7z"/></svg></span>Materi</a>
+    <a href="#lab"><span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6"/><path d="M10 3v6l-5 9a2 2 0 002 3h10a2 2 0 002-3l-5-9V3"/><path d="M7.5 15h9"/></svg></span>Lab</a>
+    <a href="#ujian"><span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2"/><path d="M9 2h6"/></svg></span>Ujian</a>
+    <a href="#kartu"><span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 3h12a2 2 0 012 2v12"/></svg></span>Kartu</a>
+  </nav>
+</div>
+
+<script>
+/* ---------- util ---------- */
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const KC='break|case|catch|continue|else|finally|for|if|return|throw|throws|try|while';
+const KS='abstract|boolean|byte|char|class|double|extends|final|float|implements|import|instanceof|int|interface|long|new|package|private|protected|public|short|static|super|this|void|null|true|false';
+const HL=new RegExp('(//.*)|("(?:[^"\\\\]|\\\\.)*")|(@\\w+)|\\b(\\d+(?:\\.\\d+)?)\\b|\\b('+KC+')\\b|\\b('+KS+')\\b|\\b([A-Z]\\w+)\\b|\\b([a-z_]\\w*)(?=\\()','g');
+function hl(src){return esc(src.replace(/^\n+|\s+$/g,'')).replace(HL,(m,c,s,a,n,kc,kw,t,f)=>`<i class="${c?'c':s?'s':a?'a':n?'n':kc?'kc':kw?'kw':t?'t':'f'}">${m}</i>`)}
+const code=s=>`<pre class="code"><code>${hl(s)}</code></pre>`;
+const tip=(t,b)=>`<div class="callout tip"><b class="t">${t}</b>${b}</div>`;
+const warn=(t,b)=>`<div class="callout warn"><b class="t">${t}</b>${b}</div>`;
+const key=(t,b)=>`<div class="callout key"><b class="t">${t}</b>${b}</div>`;
+const tbl=(h,rows)=>`<div class="tw"><table><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr>${rows.map(r=>`<tr>${r.map(x=>`<td>${x}</td>`).join('')}</tr>`).join('')}</table></div>`;
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+
+const ICONS={"home": "<path d=\"M3 11l9-8 9 8\"/><path d=\"M5 10v10h5v-6h4v6h5V10\"/>", "book": "<path d=\"M4 4h6a3 3 0 013 3v13a2 2 0 00-2-2H4z\"/><path d=\"M20 4h-6a3 3 0 00-3 3v13a2 2 0 012-2h7z\"/>", "flask": "<path d=\"M9 3h6\"/><path d=\"M10 3v6l-5 9a2 2 0 002 3h10a2 2 0 002-3l-5-9V3\"/><path d=\"M7.5 15h9\"/>", "timer": "<circle cx=\"12\" cy=\"13\" r=\"8\"/><path d=\"M12 9v4l3 2\"/><path d=\"M9 2h6\"/>", "cards": "<rect x=\"3\" y=\"6\" width=\"14\" height=\"14\" rx=\"2\"/><path d=\"M7 3h12a2 2 0 012 2v12\"/>", "cube": "<path d=\"M12 3l8 4.5v9L12 21l-8-4.5v-9z\"/><path d=\"M12 12l8-4.5M12 12v9M12 12L4 7.5\"/>", "gear": "<circle cx=\"12\" cy=\"12\" r=\"3\"/><path d=\"M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9L7 7M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1\"/>", "layers": "<path d=\"M12 3l9 5-9 5-9-5z\"/><path d=\"M3 13l9 5 9-5\"/>", "tree": "<circle cx=\"12\" cy=\"5\" r=\"2\"/><circle cx=\"6\" cy=\"19\" r=\"2\"/><circle cx=\"18\" cy=\"19\" r=\"2\"/><path d=\"M12 7v5M12 12H6v5M12 12h6v5\"/>", "lock": "<rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"/><path d=\"M8 11V8a4 4 0 018 0v3\"/>", "type": "<path d=\"M5 6V4h14v2M12 4v16M9 20h6\"/>", "code": "<path d=\"M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16\"/>", "note": "<path d=\"M6 3h9l4 4v14H6z\"/><path d=\"M14 3v5h5M9 13h7M9 17h5\"/>", "list": "<path d=\"M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01\"/>", "menu": "<path d=\"M4 6h16M4 12h16M4 18h16\"/>", "split": "<path d=\"M12 21v-8\"/><path d=\"M12 13L5 6M12 13l7-7\"/><path d=\"M5 9V6h3M19 9V6h-3\"/>", "pencil": "<path d=\"M4 20l1-5L16 4l4 4L9 19z\"/><path d=\"M14 6l4 4\"/>", "search": "<circle cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"M20 20l-4-4\"/>"};
+const I=n=>`<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]}</svg>`;
+/* ---------- state ---------- */
+let S={read:{},ans:{},exam:[],lab:{}};
+try{const x=localStorage.getItem('pbo-lms-v1');if(x)S=Object.assign(S,JSON.parse(x))}catch(e){}
+const save=()=>{try{localStorage.setItem('pbo-lms-v1',JSON.stringify(S))}catch(e){}};
+let timer=null;
+
+/* ---------- MATERI ---------- */
+const MODS=[
+{id:'m1',ic:'cube',t:'Class & Object',sum:'Cetak biru, instance, atribut, method, new, reference, nilai default.',min:12,html:()=>`
+<h2>1. Apa itu class dan object?</h2>
+<p><b>Class</b> adalah <b>cetak biru</b> (template) yang mendefinisikan <i>data</i> (atribut / field) dan <i>perilaku</i> (method) sebuah jenis benda. <b>Object</b> adalah <b>wujud nyata (instance)</b> yang dibuat dari class tersebut. Analogi: class = denah rumah, object = rumah yang benar-benar dibangun. Satu denah bisa dipakai membangun banyak rumah, dan tiap rumah punya isi sendiri.</p>
+${code(`
+public class Mahasiswa {
+    // atribut (field / state)
+    String nama;
+    int umur;
+
+    // method (behavior)
+    void perkenalan() {
+        System.out.println("Halo, saya " + nama);
+    }
+}`)}
+${code(`
+public class Main {
+    public static void main(String[] args) {
+        Mahasiswa m1 = new Mahasiswa();  // buat objek
+        m1.nama = "Ani";
+        m1.umur = 19;
+        m1.perkenalan();                 // Halo, saya Ani
+
+        Mahasiswa m2 = new Mahasiswa();  // objek lain, data sendiri
+        m2.nama = "Budi";
+        m2.perkenalan();                 // Halo, saya Budi
+    }
+}`)}
+<h3>Istilah penting</h3>
+${tbl(['Istilah','Arti','Contoh'],[
+['Class','Cetak biru / tipe baru','<code>class Mahasiswa</code>'],
+['Object / instance','Hasil <code>new</code> dari class','<code>new Mahasiswa()</code>'],
+['Atribut / field','Data milik class atau objek','<code>String nama;</code>'],
+['Method','Perilaku / aksi','<code>void perkenalan()</code>'],
+['Reference variable','Variabel yang menunjuk ke objek di heap','<code>Mahasiswa m1</code>'],
+['<code>new</code>','Membuat objek + memanggil constructor','<code>new Mahasiswa()</code>']])}
+<h2>2. Membedah satu baris pembuatan objek</h2>
+<p><code>Mahasiswa m1 = new Mahasiswa();</code> terdiri dari tiga kerja:</p>
+<ol><li><code>Mahasiswa m1</code> membuat <b>variabel referensi</b> bertipe Mahasiswa (belum ada objek).</li>
+<li><code>new Mahasiswa()</code> membuat <b>objek</b> di memori heap dan menjalankan constructor.</li>
+<li><code>=</code> membuat <code>m1</code> menunjuk ke objek tadi.</li></ol>
+<h2>3. Reference: dua variabel, satu objek</h2>
+${code(`
+Counter c1 = new Counter();
+Counter c2 = c1;      // salin REFERENCE, bukan objek
+c2.n = 5;
+System.out.println(c1.n);  // 5`)}
+<p>Karena <code>c1</code> dan <code>c2</code> menunjuk objek yang sama, perubahan lewat <code>c2</code> terlihat dari <code>c1</code>. Untuk benar-benar punya dua objek harus memakai <code>new</code> dua kali.</p>
+<h2>4. Nilai default field</h2>
+${tbl(['Tipe','Default'],[['int, long, short, byte','0'],['double, float','0.0'],['boolean','false'],['char','karakter null (\\u0000)'],['String & semua objek','<code>null</code>']])}
+${warn('NullPointerException','Memanggil method / mengakses field lewat referensi <code>null</code> menghasilkan <code>NullPointerException</code> saat program berjalan (runtime), bukan error kompilasi. Variabel lokal yang belum diisi apa pun justru error kompilasi.')}
+<h2>5. Konvensi & aturan file</h2>
+<ul><li>Nama class diawali huruf besar (PascalCase): <code>Mahasiswa</code>, <code>EBook</code>.</li>
+<li>Nama variabel &amp; method memakai camelCase: <code>totalBuku</code>, <code>showInfo()</code>.</li>
+<li>Class <code>public</code> harus berada di file dengan nama yang sama (<code>Main.java</code> untuk <code>public class Main</code>).</li>
+<li>Satu file boleh berisi banyak class, tetapi hanya satu yang <code>public</code>.</li></ul>
+${tip('Yang sering keluar ujian','Beda class vs object, arti <code>new</code>, nilai default field, dan hasil jika dua variabel menunjuk objek yang sama.')}`},
+
+{id:'m2',ic:'gear',t:'Method',sum:'Anatomi method, overload vs override, static & this, pass by value.',min:18,html:()=>`
+<h2>1. Anatomi method</h2>
+${code(`
+[modifier] [static] tipeKembali namaMethod(parameter) {
+    // isi
+    return nilai;   // jika tipeKembali bukan void
+}
+
+static double luasPersegi(double sisi) {
+    return sisi * sisi;
+}`)}
+<ul><li><b>void</b>: tidak mengembalikan nilai (boleh <code>return;</code> tanpa nilai untuk keluar lebih awal).</li>
+<li>Selain void: wajib <code>return</code> nilai yang tipenya cocok.</li>
+<li><b>Parameter</b> = variabel di deklarasi method; <b>argumen</b> = nilai yang dikirim saat memanggil.</li></ul>
+<h3>Java selalu pass by value</h3>
+${code(`
+static void ubah(int x) { x = 99; }
+// main
+int a = 1;
+ubah(a);
+System.out.println(a);   // 1  (yang berubah hanya salinan)`)}
+<p>Untuk objek, yang disalin adalah <i>reference</i>. Method bisa mengubah <b>isi</b> objek yang sama, tetapi tidak bisa membuat variabel pemanggil menunjuk objek lain.</p>
+<h2>2. Method signature</h2>
+<p><b>Signature = nama method + daftar tipe parameter (beserta urutannya).</b> Yang <u>bukan</u> bagian signature: tipe kembali, modifier, nama parameter, dan <code>throws</code>. Inilah sebab dua method yang hanya beda tipe kembali tidak boleh berada dalam satu class.</p>
+<h2>3. Overload (membebani)</h2>
+<p>Beberapa method <b>bernama sama</b> dengan <b>parameter berbeda</b> (jumlah, tipe, atau urutan tipe) dalam class yang sama. Dipilih saat <i>kompilasi</i> berdasarkan argumen.</p>
+${code(`
+int tambah(int a, int b)          { return a + b; }
+double tambah(double a, double b) { return a + b; }
+int tambah(int a, int b, int c)   { return a + b + c; }`)}
+<h2>4. Override (menimpa)</h2>
+<p>Subclass mendefinisikan ulang method milik superclass dengan <b>signature sama</b>. Dipilih saat <i>runtime</i> berdasarkan tipe objek sebenarnya.</p>
+<ul><li>Nama + parameter sama persis.</li><li>Tipe kembali sama (atau subtipe untuk objek).</li><li>Akses <b>tidak boleh lebih sempit</b> (default &rarr; private = error).</li><li>Tidak boleh meng-override method <code>static</code>, <code>final</code>, atau <code>private</code>.</li><li>Tambahkan <code>@Override</code> agar compiler memeriksa.</li></ul>
+${tbl(['','Overload','Override'],[
+['Lokasi','Class yang sama (atau turunan)','Subclass vs superclass'],
+['Signature','Harus berbeda','Harus sama'],
+['Tipe kembali','Bebas (tapi bukan pembeda)','Sama / subtipe'],
+['Waktu ditentukan','Compile time','Runtime (dynamic dispatch)'],
+['Tujuan','Satu aksi dengan variasi input','Mengubah perilaku warisan']])}
+<h2>5. Pembahasan kasus kuis (class A &amp; B)</h2>
+${code(`
+class A {
+    void cetak(int x) { }
+}
+class B extends A {
+    void cetak(int x) { }                 // baris 5
+    void cetak(String s) { }              // baris 6
+    int cetak(int y) { return y; }        // baris 7
+}`)}
+<ul><li><b>Baris 5 &rarr; Override</b>: signature <code>cetak(int)</code> sama dengan milik A, subclass menimpa.</li>
+<li><b>Baris 6 &rarr; Overload</b>: nama sama tetapi parameter <code>String</code> berbeda.</li>
+<li><b>Baris 7 &rarr; Error</b>: signature <code>cetak(int)</code> sudah ada di class B (baris 5). Beda tipe kembali saja tidak cukup, hasilnya <i>method cetak(int) is already defined</i>.</li></ul>
+<h2>6. static method dan <code>this</code></h2>
+<p>Method <code>static</code> milik <b>class</b>, bukan milik objek tertentu, sehingga <b>tidak punya <code>this</code></b> dan tidak bisa mengakses field/method instance secara langsung.</p>
+${code(`
+class Game {
+    int score;
+    static int level;
+
+    static void reset() {
+        // this.score = 0;   // ERROR: static tidak punya this
+        level = 1;           // OK: static ke static
+    }
+    void resetScore() { this.score = 0; }  // OK: method instance
+}`)}
+<p>Soal kuis: <code>public static void reset() { this.score = 0; }</code> gagal compile karena method static tidak terikat objek. Perbaikan: (1) hapus <code>static</code>, (2) jadikan <code>score</code> static lalu tulis <code>score = 0;</code>, atau (3) terima objek sebagai parameter: <code>reset(Game g) { g.score = 0; }</code>.</p>
+${warn('Jebakan klasik','Memanggil method non-static dari <code>main</code> (yang static) langsung memberi error <i>non-static method cannot be referenced from a static context</i>. Buat objeknya dulu: <code>new Main().metode();</code>.')}`},
+
+{id:'m3',ic:'layers',t:'Constructor',sum:'Aturan constructor, default constructor, this(), super(), urutan eksekusi.',min:15,html:()=>`
+<h2>1. Ciri constructor</h2>
+<ul><li>Nama <b>sama persis</b> dengan nama class.</li><li><b>Tanpa tipe kembali</b> (void pun tidak ada).</li><li>Dipanggil otomatis oleh <code>new</code> saat objek dibuat.</li><li>Tugas utama: mengisi nilai awal atribut dan memvalidasi data.</li><li>Tidak diwarisi oleh subclass.</li></ul>
+${code(`
+public class Mobil {
+    private String merk;
+    private int tahun;
+
+    public Mobil() { this("Tanpa Merk", 2000); }   // chaining
+    public Mobil(String merk) { this(merk, 2000); }
+    public Mobil(String merk, int tahun) {
+        this.merk = merk;     // field = parameter
+        this.tahun = tahun;
+    }
+}`)}
+<h2>2. Mengapa <code>this.merk = merk</code>?</h2>
+<p>Parameter bernama sama dengan field akan "menutupi" (shadowing) field. Tanpa <code>this.</code>, <code>merk = merk;</code> hanya menyalin parameter ke dirinya sendiri dan field tetap default. <code>this.merk</code> menunjuk field milik objek yang sedang dibuat.</p>
+<h2>3. Default constructor</h2>
+<p>Jika class <b>tidak punya constructor apa pun</b>, compiler menyediakan constructor kosong tanpa parameter. Begitu kamu menulis <b>satu constructor saja</b>, yang otomatis itu hilang.</p>
+${code(`
+class Mobil {
+    Mobil(String merk) { }
+}
+// main
+Mobil m = new Mobil();   // ERROR: tidak ada constructor tanpa parameter`)}
+<h2>4. Overloading constructor &amp; <code>this(...)</code></h2>
+<p>Constructor boleh banyak asalkan parameternya berbeda. <code>this(...)</code> memanggil constructor lain <b>di class yang sama</b> (untuk objek yang sama, bukan membuat objek baru) dan harus berada di <b>baris pertama</b>.</p>
+<h2>5. <code>super(...)</code> dan urutan eksekusi</h2>
+<p>Constructor subclass selalu memanggil constructor superclass lebih dulu. Jika tidak ditulis, compiler menyisipkan <code>super();</code> otomatis. Jika superclass hanya punya constructor berparameter, kamu <b>wajib</b> menulis <code>super(argumen)</code> secara eksplisit sebagai baris pertama.</p>
+${code(`
+class A { A() { System.out.print("A "); } }
+class B extends A { B() { System.out.print("B "); } }
+// new B();  -> A B`)}
+<h2>6. final field</h2>
+<p><code>private final String isbn;</code> harus diisi tepat sekali, di deklarasi atau di constructor. Tidak boleh ada setter yang mengubahnya. Itulah arti "ISBN tidak boleh berubah setelah objek dibuat".</p>
+${tbl(['','Constructor','Method biasa'],[['Nama','Sama dengan class','Bebas'],['Tipe kembali','Tidak ada','Wajib (atau void)'],['Dipanggil','Otomatis oleh new','Manual dengan titik'],['Diwarisi?','Tidak','Ya (kecuali private)']])}
+${warn('Jebakan','<code>void Mobil() { }</code> BUKAN constructor, karena ada <code>void</code>. Itu method biasa yang kebetulan bernama Mobil, dan class tetap memakai default constructor.')}`},
+
+{id:'m4',ic:'tree',t:'Inheritance',sum:'extends, super, aturan override, akses private, polymorphism sederhana.',min:18,html:()=>`
+<h2>1. Konsep</h2>
+<p>Inheritance (pewarisan) membuat class baru (<b>subclass / child</b>) yang mengambil atribut dan method dari class lama (<b>superclass / parent</b>) memakai <code>extends</code>. Hubungannya <b>is-a</b>: Kucing <i>adalah</i> Hewan, EBook <i>adalah</i> Book. Java hanya mengizinkan <b>satu</b> parent untuk class (single inheritance).</p>
+${code(`
+class Hewan {
+    protected String nama;
+    Hewan(String nama) { this.nama = nama; }
+    void suara() { System.out.println("..."); }
+}
+class Kucing extends Hewan {
+    Kucing(String nama) { super(nama); }     // panggil constructor parent
+    @Override
+    void suara() {
+        super.suara();                        // jalankan versi parent
+        System.out.println("Meow");
+    }
+}`)}
+<h2>2. Apa yang diwarisi?</h2>
+${tbl(['Anggota parent','Bisa diakses subclass?'],[['public / protected','Ya, langsung'],['default (package-private)','Hanya jika satu package'],['private','<b>Tidak</b> langsung. Pakai getter / setter / protected'],['static','Ya (milik class, ikut terlihat)'],['Constructor','Tidak diwarisi, hanya dipanggil lewat <code>super(...)</code>']])}
+${key('Inti soal kuis 1b','Pernyataan "subclass dapat mengakses atribut private lewat <code>this.namaAtribut</code>" adalah <b>SALAH</b>. Modifier <code>private</code> membatasi akses hanya di dalam class yang mendeklarasikannya. <code>this</code> hanya menunjuk objek sekarang, tidak mengubah aturan akses. Subclass harus memakai getter/setter atau field <code>protected</code>.')}
+${code(`
+class A { private int x = 1; }
+class B extends A {
+    void f() { x = 5; }        // ERROR: x has private access in A
+}`)}
+<h2>3. Tiga kegunaan <code>super</code></h2>
+<ol><li><code>super(args)</code> memanggil constructor parent (harus baris pertama).</li><li><code>super.method()</code> memanggil versi method milik parent.</li><li><code>super.field</code> mengakses field parent yang tertutup field anak bernama sama.</li></ol>
+<h2>4. Constructor chaining</h2>
+${code(`
+class Induk { Induk(int x) { } }          // tidak ada constructor kosong
+class Anak extends Induk {
+    Anak() { }          // ERROR: super() implisit tidak ketemu
+    Anak(int x) { super(x); }   // OK
+}`)}
+<h2>5. Override &amp; <code>@Override</code></h2>
+<p>Jika kamu menulis <code>@Override</code> tetapi signature tidak cocok dengan method mana pun di parent, hasilnya <b>compile error</b>. Fitur ini melindungi dari salah ketik.</p>
+${code(`
+class A { void f(int x) { } }
+class B extends A {
+    @Override void f(String s) { }   // ERROR: tidak meng-override apa pun
+}`)}
+<h2>6. Polymorphism sederhana</h2>
+<p>Variabel bertipe parent boleh menunjuk objek subclass. Method yang dijalankan ditentukan oleh <b>tipe objek sebenarnya</b> (bukan tipe variabel).</p>
+${code(`
+Hewan h = new Kucing("Tom");
+h.suara();      // versi Kucing: ... lalu Meow`)}
+<ul><li>Lewat variabel bertipe parent, hanya method milik parent yang bisa dipanggil (method khusus anak butuh cast).</li><li>Field dan method static <b>tidak</b> polimorfik.</li></ul>
+<h2>7. final dan Object</h2>
+<p><code>final class</code> tidak bisa di-extend; <code>final</code> method tidak bisa di-override. Semua class otomatis turunan <code>Object</code> (punya <code>toString()</code>, <code>equals()</code>).</p>
+${tip('Contoh dari kuis','<code>EBook extends Book</code>: EBook memanggil <code>super(isbn, title, pages)</code>, menambah field <code>fileSize</code>, lalu meng-override <code>showInfo()</code> dengan <code>super.showInfo()</code> untuk memakai ulang cetakan milik Book.')}`},
+
+{id:'m5',ic:'lock',t:'Encapsulation, static & final',sum:'private + getter/setter, access modifier, this, static, final vs static final.',min:20,html:()=>`
+<h2>1. Enkapsulasi</h2>
+<p>Menyembunyikan data (field <code>private</code>) dan hanya membukanya lewat method publik (getter / setter) yang bisa <b>memvalidasi</b> nilai. Manfaat: data selalu valid, implementasi bisa diubah tanpa merusak kode pemakai, dan akses terkontrol.</p>
+${code(`
+public class Rekening {
+    private double saldo;                 // tersembunyi
+
+    public double getSaldo() { return saldo; }
+    public void setor(double n) {
+        if (n > 0) saldo += n;            // validasi
+    }
+}`)}
+<h2>2. Access modifier</h2>
+${tbl(['Modifier','Class sama','Package sama','Subclass (beda package)','Luar'],[
+['<code>private</code>','Ya','Tidak','Tidak','Tidak'],
+['(default)','Ya','Ya','Tidak','Tidak'],
+['<code>protected</code>','Ya','Ya','Ya','Tidak'],
+['<code>public</code>','Ya','Ya','Ya','Ya']])}
+<h2>3. Kata kunci <code>this</code></h2>
+<ul><li><code>this.x</code> membedakan field dari parameter bernama sama.</li><li><code>this(...)</code> memanggil constructor lain di class yang sama.</li><li><code>this</code> sebagai nilai: mengirim objek sekarang ke method lain.</li><li>Tidak tersedia di konteks <code>static</code>.</li></ul>
+<h2>4. static: milik class</h2>
+<p>Anggota <code>static</code> hanya punya <b>satu salinan bersama</b> untuk semua objek, diakses lewat <code>NamaClass.anggota</code>. Cocok untuk penghitung, konstanta, dan utilitas.</p>
+${code(`
+class Item {
+    static int n = 0;
+    Item() { n++; }
+}
+new Item(); new Item(); new Item();
+System.out.println(Item.n);   // 3`)}
+<p>Inilah mekanisme <code>totalBuku</code> di kuis: tiap <code>new Book(...)</code> menjalankan <code>totalBuku++</code> pada satu variabel yang sama.</p>
+<h2>5. final</h2>
+${tbl(['Dipasang pada','Artinya'],[['Variabel / field','Nilai hanya boleh di-assign sekali'],['Method','Tidak boleh di-override'],['Class','Tidak boleh di-extend']])}
+<h2>6. <code>final</code> vs <code>static final</code> (kuis 1e)</h2>
+${code(`
+class Demo {
+    private final int MAX = 100;            // salinan PER OBJEK
+    private static final int LIMIT = 100;   // satu salinan UNTUK CLASS
+
+    int a() { return this.MAX; }            // lewat objek
+    static int b() { return Demo.LIMIT; }   // lewat nama class
+}`)}
+${tbl(['','private final int MAX','private static final int MAX'],[
+['Jumlah salinan','Satu per objek (10 objek = 10 salinan)','Satu saja milik class'],
+['Memori','Boros jika nilainya sama untuk semua','Hemat, cocok untuk konstanta'],
+['Cara akses (di dalam class)','<code>this.MAX</code> / <code>objek.MAX</code>','<code>Demo.MAX</code>'],
+['Dari method static','Tidak langsung, perlu objek','Bisa langsung'],
+['Cara akses dari luar','Tidak bisa (private), butuh getter','Tidak bisa (private), butuh getter static']])}
+${tip('Catatan','Keduanya <code>private</code>, jadi dari class lain tetap tidak bisa dibaca langsung. Penamaan konstanta memakai UPPER_SNAKE_CASE, misal <code>MAX_VALUE</code>.')}
+<h2>7. Immutable object</h2>
+<p>Semua field <code>private final</code>, diisi di constructor, tanpa setter. Contoh bawaan Java: <code>String</code>. Objek tidak bisa berubah setelah dibuat sehingga aman dibagikan.</p>`},
+
+{id:'m6',ic:'type',t:'Dasar Java & Identifier',sum:'Aturan identifier, keyword, tipe data, operator, penelusuran output.',min:14,html:()=>`
+<h2>1. Aturan identifier (nama variabel, method, class)</h2>
+<ol><li>Hanya huruf, angka, <code>_</code>, dan <code>$</code>.</li><li><b>Tidak boleh diawali angka.</b></li><li>Tidak boleh mengandung spasi atau simbol lain (<code>-</code>, <code>@</code>, <code>#</code>, dst).</li><li>Tidak boleh sama dengan <b>keyword</b> (kata cadangan) Java.</li><li><b>Case sensitive</b>: <code>Total</code> &ne; <code>total</code>.</li></ol>
+${tbl(['Token','Valid?','Alasan'],[
+['<code>get-Name</code>','Tidak','Tanda minus bukan karakter identifier'],
+['<code>_setData</code>','<b>Ya</b>','Boleh diawali underscore'],
+['<code>1Print</code>','Tidak','Diawali angka'],
+['<code>displayAll</code>','<b>Ya</b>','Huruf saja'],
+['<code>$total</code>','<b>Ya</b>','<code>$</code> diizinkan'],
+['<code>class</code>','Tidak','Keyword'],
+['<code>Class</code>','<b>Ya</b>','Huruf besar C, berbeda dari keyword <code>class</code>'],
+['<code>main</code>','<b>Ya</b>','Bukan keyword, hanya nama method khusus'],
+['<code>nilai akhir</code>','Tidak','Mengandung spasi']])}
+<h3>Keyword yang wajib dikenali</h3>
+<p><code>class</code> <code>public</code> <code>private</code> <code>protected</code> <code>static</code> <code>final</code> <code>void</code> <code>int</code> <code>double</code> <code>boolean</code> <code>if</code> <code>else</code> <code>for</code> <code>while</code> <code>return</code> <code>new</code> <code>this</code> <code>super</code> <code>extends</code> <code>implements</code> <code>interface</code> <code>abstract</code> <code>try</code> <code>catch</code> <code>null</code> <code>true</code> <code>false</code></p>
+<h2>2. Konvensi penamaan</h2>
+${tbl(['Untuk','Gaya','Contoh'],[['Class','PascalCase','<code>EBook</code>'],['Variabel &amp; method','camelCase','<code>totalBuku</code>, <code>getTotalBuku()</code>'],['Konstanta','UPPER_SNAKE_CASE','<code>MAX_VALUE</code>'],['Package','huruf kecil','<code>com.kampus.app</code>']])}
+<h2>3. Tipe data dasar</h2>
+${tbl(['Tipe','Isi','Contoh'],[['int','Bilangan bulat','<code>200</code>'],['double','Desimal','<code>5.2</code>'],['boolean','true / false','<code>true</code>'],['char','Satu karakter',"<code>'A'</code>"],['String','Teks (objek)','<code>"OOP Java"</code>']])}
+<h2>4. Operator &amp; jebakan hitungan</h2>
+${code(`
+int h = 7 / 2;                      // 3  (pembagian int memotong desimal)
+double d = 7 / 2.0;                 // 3.5
+int x = 5; x++; ++x;                // x = 7
+System.out.println("A" + 1 + 2);    // A12  (sudah String, digabung)
+System.out.println(1 + 2 + "A");    // 3A   (1+2 dijumlah dulu)
+System.out.println(1 + 2 + "A" + 1 + 2);  // 3A12`)}
+<p>Aturan: ekspresi dikerjakan <b>dari kiri ke kanan</b>. Setelah bertemu String, semua yang berikutnya digabung sebagai teks.</p>
+<h2>5. Method main</h2>
+${code(`public static void main(String[] args) { }`)}
+<p><code>public</code> agar JVM bisa memanggil, <code>static</code> agar jalan tanpa objek, <code>void</code> tidak mengembalikan nilai, <code>String[] args</code> menerima argumen baris perintah.</p>
+<h2>6. println vs print</h2>
+<p><code>System.out.println(x)</code> mencetak lalu pindah baris. <code>System.out.print(x)</code> mencetak tanpa pindah baris.</p>`},
+
+{id:'m7',ic:'code',t:'Pengembangan Program Sederhana',sum:'Langkah merancang program OOP, studi kasus Book/EBook dan Rekening, cara menelusuri output.',min:25,html:()=>`
+<h2>1. Alur merancang program OOP</h2>
+<ol><li><b>Baca kasus, cari kata benda</b> &rarr; kandidat class (Buku, Rekening).</li><li><b>Cari data</b> tiap class &rarr; atribut (isbn, judul, saldo). Tentukan mana yang tetap (<code>final</code>), bersama (<code>static</code>), atau tertutup (<code>private</code>).</li><li><b>Cari kata kerja</b> &rarr; method (setor, tarik, showInfo).</li><li><b>Constructor</b>: isi nilai awal dan validasi (panggil setter).</li><li><b>Cek hubungan is-a</b> &rarr; pakai <code>extends</code> bila ada jenis khusus (EBook is-a Book).</li><li><b>Tulis Main</b> untuk menguji: buat objek, panggil method, cetak hasil.</li></ol>
+<h2>2. Studi kasus 1: Book &amp; EBook (kuis bagian 2)</h2>
+<p>Ketentuan soal: ISBN tidak boleh berubah (<code>final</code>), <code>totalBuku</code> milik bersama (<code>static</code>), pages diisi lewat setter, tiap objek menambah <code>totalBuku</code>.</p>
+${code(`
+public class Book {
+    private final String isbn;            // (1) final
+    private String title;
+    private int pages;
+    private static int totalBuku = 0;     // (2) static
+
+    public Book(String isbn, String title, int pages) {
+        this.isbn = isbn;
+        this.title = title;
+        setPages(pages);                  // (3) lewat setter
+        totalBuku++;                      // (4)
+    }
+    public void setPages(int pages) {
+        if (pages <= 0) {                 // (5)
+            System.out.println("Halaman tidak valid");
+            this.pages = 1;
+        } else {
+            this.pages = pages;           // (6)
+        }
+    }
+    public static int getTotalBuku() { return totalBuku; }
+    public void showInfo() {
+        System.out.println("Judul: " + title + ", Halaman: " + pages);
+    }
+}
+
+public class EBook extends Book {
+    private double fileSize;
+    public EBook(String isbn, String title, int pages, double fileSize) {  // (7)
+        super(isbn, title, pages);
+        this.fileSize = fileSize;
+    }
+    @Override
+    public void showInfo() {
+        super.showInfo();                 // (8)
+        System.out.println("Ukuran File: " + fileSize + " MB");
+    }
+}`)}
+${code(`
+public class Main {
+    public static void main(String[] args) {
+        Book b = new Book("978-1", "Dasar Java", 200);
+        EBook e = new EBook("978-2", "OOP Java", -10, 5.2);
+        e.showInfo();
+        System.out.println("Total: " + Book.getTotalBuku());
+    }
+}`)}
+<h3>Menelusuri output langkah demi langkah</h3>
+${tbl(['Langkah','Yang terjadi','totalBuku','Cetak'],[
+['1','<code>new Book("978-1","Dasar Java",200)</code>: setPages(200) valid, pages=200','1','-'],
+['2','<code>new EBook(..., -10, 5.2)</code>: super(...) masuk constructor Book','-','-'],
+['3','setPages(-10): kondisi <code>pages &lt;= 0</code> benar, pages=1','-','Halaman tidak valid'],
+['4','totalBuku++ di constructor Book','2','-'],
+['5','Kembali ke EBook: fileSize = 5.2','2','-'],
+['6','<code>e.showInfo()</code> (versi EBook) &rarr; <code>super.showInfo()</code>','2','Judul: OOP Java, Halaman: 1'],
+['7','Baris berikutnya di showInfo EBook','2','Ukuran File: 5.2 MB'],
+['8','<code>Book.getTotalBuku()</code>','2','Total: 2']])}
+${key('Output akhir','<pre class="code" style="margin:6px 0 0"><code>Halaman tidak valid\nJudul: OOP Java, Halaman: 1\nUkuran File: 5.2 MB\nTotal: 2</code></pre>')}
+<p><b>Mengapa (3) harus <code>setPages(pages)</code>?</b> Jika ditulis <code>this.pages = pages;</code>, validasi dilewati dan <code>-10</code> tersimpan apa adanya. Soal sengaja memakai -10 untuk menguji ini.</p>
+<p><b>Mengapa (7) lengkap empat parameter?</b> Constructor EBook perlu <code>isbn, title, pages</code> untuk diteruskan ke <code>super(...)</code>, ditambah <code>fileSize</code> untuk field miliknya sendiri.</p>
+<h2>3. Studi kasus 2: Rekening &amp; RekeningPremium</h2>
+${code(`
+class Rekening {
+    private final String noRek;
+    protected double saldo;
+    private static int jumlah = 0;
+
+    Rekening(String noRek, double saldoAwal) {
+        this.noRek = noRek;
+        this.saldo = saldoAwal >= 0 ? saldoAwal : 0;
+        jumlah++;
+    }
+    void setor(double n) {
+        if (n <= 0) { System.out.println("Nominal tidak valid"); return; }
+        saldo += n;
+    }
+    boolean tarik(double n) {
+        if (n <= 0 || n > saldo) { System.out.println("Gagal tarik"); return false; }
+        saldo -= n;
+        return true;
+    }
+    double getSaldo() { return saldo; }
+    static int getJumlah() { return jumlah; }
+}
+
+class RekeningPremium extends Rekening {
+    private double limit;
+    RekeningPremium(String noRek, double saldoAwal, double limit) {
+        super(noRek, saldoAwal);
+        this.limit = limit;
+    }
+    @Override
+    boolean tarik(double n) {
+        if (n <= 0 || n > saldo + limit) { System.out.println("Gagal tarik"); return false; }
+        saldo -= n;
+        return true;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Rekening r = new Rekening("001", 100000);
+        RekeningPremium p = new RekeningPremium("002", 50000, 100000);
+        r.setor(-5);
+        r.tarik(150000);
+        p.tarik(120000);
+        System.out.println(p.getSaldo());
+        System.out.println(Rekening.getJumlah());
+    }
+}`)}
+<p>Output: <code>Nominal tidak valid</code>, <code>Gagal tarik</code>, <code>-70000.0</code>, <code>2</code>. Pemakaian <code>protected saldo</code> membuat subclass bisa mengubah saldo langsung, sementara <code>noRek</code> tetap <code>private final</code>.</p>
+<h2>4. Strategi menjawab saat close book</h2>
+${tbl(['Tipe soal','Cara'],[
+['Lengkapi kode','Baca komentar syarat tiap nomor, cocokkan dengan keyword: <i>tidak boleh berubah</i> = final, <i>bersama</i> = static, <i>melalui setter</i> = panggil setXxx, <i>identifikasi field</i> = parameter constructor.'],
+['Tulis output','Gambar tabel jejak: nilai variabel tiap langkah. Perhatikan urutan constructor (parent dulu), nilai static, dan <code>println</code> vs <code>print</code>.'],
+['Overload / override / error','Bandingkan signature dengan method parent dan method lain di class yang sama. Cek akses, tipe kembali, static.'],
+['Benar/Salah beralasan','Tulis kalimat: pernyataan benar/salah, karena aturan Java apa, plus contoh singkat.']])}
+${tip('Cek akhir sebelum kumpul','Titik koma, tanda kurung, huruf besar-kecil nama (<code>showInfo</code> vs <code>showinfo</code>), dan tipe parameter constructor.')}`}
+];
+
+/* ---------- BANK SOAL ---------- */
+const QB=[
+{id:'m1-1',m:'m1',q:'Hubungan yang benar antara class dan object adalah…',o:['Object adalah cetak biru, class adalah hasilnya','Class adalah cetak biru, object adalah instance (wujud nyata) dari class','Class dan object sama persis','Object harus dibuat sebelum class'],a:1,e:'Class mendefinisikan atribut dan method (cetak biru). Object dibuat dari class dengan <code>new</code> dan punya data sendiri.'},
+{id:'m1-2',m:'m1',q:'Apa yang terjadi saat kode ini dijalankan?',code:'Mahasiswa m = null;\nm.nama = "Ani";',o:['Mencetak null','Compile error: m belum dibuat','NullPointerException saat program berjalan','Berjalan normal'],a:2,e:'<code>m</code> bernilai null (tidak menunjuk objek). Mengakses field lewat null memunculkan NullPointerException saat <i>runtime</i>.'},
+{id:'m1-3',m:'m1',q:'Nilai default field <code>int umur</code> pada objek yang baru dibuat adalah…',o:['null','0','-1','Tidak ada, error'],a:1,e:'Field bertipe int otomatis bernilai 0. Objek/String bernilai null, boolean false.'},
+{id:'m1-4',m:'m1',q:'Pernyataan mana yang benar-benar membuat objek Mahasiswa?',o:['Mahasiswa m;','Mahasiswa m = new Mahasiswa();','new Mahasiswa m;','class m = Mahasiswa();'],a:1,e:'<code>new</code> membuat objek dan constructor dijalankan. Opsi A hanya membuat variabel referensi.'},
+{id:'m1-5',m:'m1',q:'Output kode berikut?',code:'Counter c1 = new Counter();\nCounter c2 = c1;\nc2.n = 5;\nSystem.out.println(c1.n);',o:['0','5','null','Compile error'],a:1,e:'<code>c2 = c1</code> menyalin referensi, bukan objek. Keduanya menunjuk objek yang sama, jadi <code>c1.n</code> ikut 5.'},
+
+{id:'m2-1',m:'m2',q:'Dua method disebut overload jika…',o:['Nama sama, tipe parameter berbeda','Nama sama, hanya tipe kembali berbeda','Nama berbeda, parameter sama','Berada di class berbeda dan signature sama'],a:0,e:'Overload dibedakan oleh daftar parameter. Tipe kembali saja tidak cukup.'},
+{id:'m2-2',m:'m2',q:'Apa output program ini?',code:'static void p(int x)    { System.out.print("int "); }\nstatic void p(double x) { System.out.print("double "); }\n// main:\np(5);\np(5.0);',o:['int int','int double','double double','Compile error'],a:1,e:'Java memilih overload yang paling cocok dengan tipe argumen: 5 &rarr; int, 5.0 &rarr; double.'},
+{id:'m2-3',m:'m2',q:'Method <code>static</code> TIDAK dapat…',o:['Dipanggil lewat nama class','Memakai <code>this</code> atau mengakses field instance langsung','Mengakses field static','Bersifat public'],a:1,e:'Method static tidak terikat objek, sehingga tidak ada <code>this</code> dan tidak bisa menyentuh member instance tanpa objek.'},
+{id:'m2-4',m:'m2',q:'Output kode berikut?',code:'static void ubah(int x) { x = 99; }\n// main:\nint a = 1;\nubah(a);\nSystem.out.println(a);',o:['99','1','0','Compile error'],a:1,e:'Java pass by value: method hanya mengubah salinan <code>x</code>, <code>a</code> tetap 1.'},
+{id:'m2-5',m:'m2',q:'Apa hasil kompilasi class ini?',code:'class T {\n    void f(int a) { }\n    int f(int b) { return b; }\n}',o:['Overload sah','Override sah','Compile error: signature sama','Runtime error'],a:2,e:'Signature <code>f(int)</code> sama. Tipe kembali dan nama parameter bukan bagian signature, jadi duplikat.'},
+{id:'m2-6',m:'m2',q:'Pada method dengan tipe kembali <code>void</code>…',o:['Boleh <code>return 0;</code>','Boleh hanya <code>return;</code> tanpa nilai','Tidak boleh ada return','Harus <code>return null;</code>'],a:1,e:'void tidak mengembalikan nilai, tetapi <code>return;</code> boleh dipakai untuk keluar dari method lebih awal.'},
+
+{id:'m3-1',m:'m3',q:'Ciri constructor yang benar:',o:['Nama bebas, ada tipe kembali','Nama sama dengan class dan tanpa tipe kembali','Harus static','Dipanggil manual seperti method biasa'],a:1,e:'Constructor bernama sama dengan class, tanpa tipe kembali, dipanggil otomatis oleh <code>new</code>.'},
+{id:'m3-2',m:'m3',q:'Hasil kode ini?',code:'class Mobil {\n    Mobil(String merk) { }\n}\n// main:\nMobil m = new Mobil();',o:['Berjalan normal','Compile error: tidak ada constructor tanpa parameter','NullPointerException','merk bernilai null'],a:1,e:'Begitu ada constructor buatan sendiri, default constructor tidak lagi disediakan compiler.'},
+{id:'m3-3',m:'m3',q:'<code>this(...)</code> di dalam constructor berfungsi untuk…',o:['Memanggil constructor parent','Memanggil constructor lain di class yang sama (baris pertama)','Memanggil method biasa','Membuat objek baru di heap'],a:1,e:'<code>this(...)</code> melakukan chaining ke constructor lain di class yang sama untuk objek yang sama. <code>super(...)</code> yang ke parent.'},
+{id:'m3-4',m:'m3',q:'Output kode berikut?',code:'class A { A() { System.out.print("A "); } }\nclass B extends A { B() { System.out.print("B "); } }\n// main:\nnew B();',o:['B A','A B','B','A'],a:1,e:'Constructor parent dijalankan lebih dulu (<code>super()</code> implisit), baru isi constructor anak.'},
+{id:'m3-5',m:'m3',q:'Apakah <code>void Mobil() { }</code> di dalam class Mobil adalah constructor?',o:['Ya','Bukan, karena ada void sehingga jadi method biasa','Ya, tapi deprecated','Compile error'],a:1,e:'Constructor tidak boleh punya tipe kembali. Dengan <code>void</code> itu hanyalah method bernama Mobil.'},
+{id:'m3-6',m:'m3',q:'Field <code>private final String isbn;</code> harus…',o:['Diisi sekali (di deklarasi atau constructor)','Diisi lewat setter','Boleh dibiarkan kosong','Dibuat static'],a:0,e:'Field final wajib diberi nilai tepat sekali. Setter yang mengubahnya menyebabkan compile error.'},
+
+{id:'m4-1',m:'m4',q:'Kata kunci untuk pewarisan di Java:',o:['implements','extends','inherits','super'],a:1,e:'<code>class B extends A</code>. <code>implements</code> dipakai untuk interface.'},
+{id:'m4-2',m:'m4',q:'Hasil kode ini?',code:'class A { private int x = 1; }\nclass B extends A {\n    void f() { x = 5; }\n}',o:['Berjalan, x jadi 5','Compile error: x private di A','Runtime error','x tetap 1 tanpa error'],a:1,e:'Atribut private tidak dapat diakses subclass. Gunakan getter/setter atau ubah menjadi protected.'},
+{id:'m4-3',m:'m4',q:'Hasil kode ini?',code:'class A { void f(int x) { } }\nclass B extends A {\n    @Override void f(String s) { }\n}',o:['Overload sah','Override sah','Compile error karena @Override tidak meng-override apa pun','Runtime error'],a:2,e:'Parameter String membuat signature berbeda, jadi tidak menimpa. Anotasi @Override memaksa compiler menandainya error.'},
+{id:'m4-4',m:'m4',q:'Output kode berikut?',code:'class Hewan { void suara() { System.out.print("..."); } }\nclass Anjing extends Hewan {\n    @Override void suara() { System.out.print("Guk"); }\n}\n// main:\nHewan h = new Anjing();\nh.suara();',o:['...','Guk','Compile error','... Guk'],a:1,e:'Polymorphism: method dipilih dari tipe objek sebenarnya (Anjing), bukan tipe variabel (Hewan).'},
+{id:'m4-5',m:'m4',q:'Pada Java, sebuah class…',o:['Boleh extends banyak class','Hanya boleh extends satu class','Boleh multiple jika abstract','Boleh multiple jika final'],a:1,e:'Java hanya mendukung single inheritance untuk class.'},
+{id:'m4-6',m:'m4',q:'Hasil kode ini?',code:'class Induk { Induk(int x) { } }\nclass Anak extends Induk {\n    Anak() { }\n}',o:['Berjalan normal','Compile error: super() implisit tidak menemukan constructor tanpa parameter','Runtime error','x bernilai 0'],a:1,e:'Constructor Anak menyisipkan <code>super();</code>, tetapi Induk hanya punya <code>Induk(int)</code>. Harus <code>super(nilai)</code> eksplisit.'},
+{id:'m4-7',m:'m4',q:'<code>super.showInfo();</code> di dalam method subclass berarti…',o:['Memanggil constructor parent','Menjalankan versi method showInfo milik parent','Membuat objek parent baru','Menghapus override'],a:1,e:'<code>super.namaMethod()</code> memanggil versi superclass, berguna memakai ulang perilaku lama lalu menambahkan yang baru.'},
+
+{id:'m5-1',m:'m5',q:'Tujuan utama enkapsulasi:',o:['Mempercepat program','Menyembunyikan data dan mengontrol akses lewat method','Mengurangi jumlah class','Mengganti inheritance'],a:1,e:'Field private + getter/setter memungkinkan validasi dan melindungi data.'},
+{id:'m5-2',m:'m5',q:'Access modifier paling ketat:',o:['public','protected','default','private'],a:3,e:'Urutan dari longgar: public, protected, default, private.'},
+{id:'m5-3',m:'m5',q:'Perbedaan <code>private final int MAX = 100;</code> dan <code>private static final int MAX = 100;</code>:',o:['Tidak ada bedanya','Yang pertama punya salinan per objek (akses lewat objek), yang kedua satu salinan milik class (akses NamaClass.MAX)','Yang pertama bisa diubah, yang kedua tidak','Yang kedua hanya untuk method'],a:1,e:'<code>static</code> membuat hanya ada satu salinan di class. Tanpa static, setiap objek memiliki salinan sendiri.'},
+{id:'m5-4',m:'m5',q:'Output kode berikut?',code:'class Orang {\n    private int umur;\n    void setUmur(int u) { if (u > 0) umur = u; }\n    int getUmur() { return umur; }\n}\n// main:\nOrang o = new Orang();\no.setUmur(-5);\nSystem.out.println(o.getUmur());',o:['-5','0','Error','null'],a:1,e:'Validasi menolak -5, umur tetap bernilai default 0.'},
+{id:'m5-5',m:'m5',q:'Anggota <code>protected</code> dapat diakses oleh…',o:['Hanya class itu sendiri','Class yang sama, package yang sama, dan subclass','Semua class','Hanya package yang sama'],a:1,e:'protected = default + subclass (termasuk beda package).'},
+{id:'m5-6',m:'m5',q:'Output kode berikut?',code:'class Item {\n    static int n = 0;\n    Item() { n++; }\n}\n// main:\nnew Item(); new Item(); new Item();\nSystem.out.println(Item.n);',o:['0','1','3','Error'],a:2,e:'<code>n</code> static hanya satu dan dinaikkan oleh tiap objek baru, hasilnya 3.'},
+{id:'m5-7',m:'m5',q:'Penulisan konstanta yang sesuai konvensi:',o:['maxValue','MAX_VALUE','Max_value','max-value'],a:1,e:'Konstanta memakai UPPER_SNAKE_CASE. <code>max-value</code> bahkan bukan identifier valid.'},
+
+{id:'m6-1',m:'m6',q:'Identifier yang valid:',o:['2nama','nilai-akhir','_nilai','int'],a:2,e:'Boleh diawali huruf, <code>_</code>, atau <code>$</code>. Tidak boleh angka, minus, atau keyword.'},
+{id:'m6-2',m:'m6',q:'Manakah yang valid?',o:['class','Class','nilai akhir','get-Name'],a:1,e:'Java case sensitive: <code>Class</code> (C besar) bukan keyword, sedangkan <code>class</code> keyword.'},
+{id:'m6-3',m:'m6',q:'Output?',code:'System.out.println(1 + 2 + "A" + 1 + 2);',o:['3A12','12A12','3A3','12A3'],a:0,e:'Kiri ke kanan: 1+2=3, lalu String "A", setelah itu 1 dan 2 digabung sebagai teks: <code>3A12</code>.'},
+{id:'m6-4',m:'m6',q:'Output?',code:'int x = 5;\nx++;\n++x;\nSystem.out.println(x);',o:['5','6','7','8'],a:2,e:'Dua kali penambahan 1: 5 &rarr; 6 &rarr; 7.'},
+{id:'m6-5',m:'m6',q:'Deklarasi method main yang benar:',o:['public void main(String args)','public static void main(String[] args)','static public int main()','void main(String[] a)'],a:1,e:'<code>public static void main(String[] args)</code> adalah titik masuk standar JVM.'},
+{id:'m6-6',m:'m6',q:'Output?',code:'int h = 7 / 2;\nSystem.out.println(h);',o:['3.5','3','4','3.0'],a:1,e:'Pembagian dua int menghasilkan int (desimal dibuang): 3.'},
+{id:'m6-7',m:'m6',q:'<code>Total</code> dan <code>total</code> adalah…',o:['Sama','Dua identifier berbeda','Error','Sama jika di class sama'],a:1,e:'Java membedakan huruf besar dan kecil.'},
+
+{id:'m7-1',m:'m7',q:'Langkah awal merancang program OOP dari sebuah kasus:',o:['Menulis method main','Mengidentifikasi class, atribut, dan perilaku','Menulis semua getter','Menghafal syntax'],a:1,e:'Mulai dari analisis: kata benda &rarr; class, data &rarr; atribut, kata kerja &rarr; method.'},
+{id:'m7-2',m:'m7',q:'EBook sebaiknya <code>extends Book</code> karena…',o:['EBook has-a Book','EBook is-a Book (jenis khusus buku)','Agar bisa multiple inheritance','Agar tidak butuh constructor'],a:1,e:'Pewarisan dipakai untuk hubungan is-a. EBook adalah Book dengan tambahan fileSize.'},
+{id:'m7-3',m:'m7',q:'Mengapa constructor Book memanggil <code>setPages(pages)</code> dan bukan <code>this.pages = pages</code>?',o:['Lebih cepat','Agar validasi di setter ikut berlaku saat objek dibuat','this dilarang di constructor','Agar pages jadi static'],a:1,e:'Dengan setter, nilai tidak valid (&le; 0) diganti 1 dan pesan dicetak. Assign langsung melewati validasi.'},
+{id:'m7-4',m:'m7',q:'Setelah 3 objek Book dibuat, <code>Book.getTotalBuku()</code> bernilai…',o:['0','1','3','Tergantung objek'],a:2,e:'<code>totalBuku</code> static dan naik 1 di setiap constructor.'},
+{id:'m7-5',m:'m7',q:'<code>new EBook("978-2","OOP Java",-10,5.2)</code>: nilai akhir <code>pages</code> objek tersebut?',o:['-10','0','1','5'],a:2,e:'-10 melanggar <code>pages &lt;= 0</code>, sehingga setter mengisi 1.'},
+{id:'m7-6',m:'m7',q:'Pada program kuis, baris output terakhir (Total) adalah…',o:['Total: 1','Total: 2','Total: 3','Total: 0'],a:1,e:'Dua objek dibuat: Book b dan EBook e (EBook memanggil constructor Book lewat super), jadi totalBuku = 2.'}
+];
+
+/* ---------- Flashcards ---------- */
+const CARDS=[
+['Apa itu class?','Cetak biru yang mendefinisikan atribut dan method sebuah jenis objek.'],
+['Apa itu object?','Instance nyata dari class, dibuat dengan <code>new</code>, punya data sendiri.'],
+['Ciri constructor?','Nama sama dengan class, tanpa tipe kembali, dipanggil otomatis oleh new, tidak diwarisi.'],
+['Kapan default constructor ada?','Hanya jika class tidak punya constructor sama sekali. Tulis satu constructor, yang otomatis hilang.'],
+['Overload?','Nama method sama, signature (parameter) berbeda, di class yang sama. Ditentukan saat compile.'],
+['Override?','Subclass menulis ulang method parent dengan signature sama. Akses tidak boleh lebih sempit. Ditentukan saat runtime.'],
+['Signature method?','Nama method + daftar tipe parameter. Tipe kembali TIDAK termasuk.'],
+['Fungsi <code>this</code>?','Menunjuk objek saat ini: <code>this.x</code> beda field vs parameter, <code>this(...)</code> panggil constructor lain. Tidak ada di method static.'],
+['Fungsi <code>super</code>?','<code>super(...)</code> ke constructor parent (baris pertama), <code>super.m()</code> ke method parent.'],
+['Apa itu static?','Milik class, satu salinan bersama, diakses NamaClass.anggota. Tidak punya this.'],
+['Arti final?','Variabel: sekali assign. Method: tidak bisa di-override. Class: tidak bisa di-extend.'],
+['final vs static final?','final: satu salinan per objek. static final: satu salinan milik class (konstanta), akses NamaClass.MAX.'],
+['Urutan private, default, protected, public?','Dari paling ketat ke paling longgar: private &rarr; default &rarr; protected &rarr; public.'],
+['Subclass akses private parent?','Tidak bisa langsung. Pakai getter/setter atau protected.'],
+['Enkapsulasi?','Field private + method publik yang memvalidasi, agar data terlindungi.'],
+['Keyword pewarisan?','<code>extends</code>. Class hanya boleh punya satu parent.'],
+['Polymorphism?','Variabel tipe parent menunjuk objek anak. Method override yang jalan mengikuti objek sebenarnya.'],
+['Aturan identifier?','Huruf/angka/_/$, tidak diawali angka, tanpa spasi atau simbol, bukan keyword, case sensitive.'],
+['Urutan eksekusi constructor?','Parent dulu (super), baru badan constructor anak.'],
+['Pass by value?','Argumen disalin. Untuk objek, referensi yang disalin, jadi isi objek bisa berubah tetapi variabel pemanggil tidak pindah objek.'],
+['Kapan pakai inheritance?','Jika hubungan is-a (EBook is-a Book). Jika has-a, pakai atribut objek.'],
+['Nilai default field?','int 0, double 0.0, boolean false, objek/String null.'],
+['Method static butuh objek?','Tidak. Dipanggil lewat nama class. Sebaliknya static tidak bisa memanggil non-static tanpa objek.'],
+['<code>"A"+1+2</code> vs <code>1+2+"A"</code>?','<code>A12</code> vs <code>3A</code>. Evaluasi kiri ke kanan.']
+];
+
+/* ---------- helpers UI ---------- */
+const done=()=>Object.values(S.read).filter(Boolean).length;
+const correct=()=>QB.filter(q=>S.ans[q.id]===q.a).length;
+const overall=()=>Math.round((done()/MODS.length*0.4+correct()/QB.length*0.6)*100);
+function nav(){
+  const cur=location.hash.slice(1)||'home';
+  const L=(h,ic,t,x='')=>`<a href="#${h}" class="${cur===h?'on':''}"><span>${I(ic)}</span>${t}${x}</a>`;
+  $('#nav').innerHTML=L('home','home','Beranda')+'<div class="sec">Materi</div>'+MODS.map((m,i)=>L('m/'+m.id,m.ic,`${i+1}. ${m.t}`,S.read[m.id]?'<span class="tick">&#10003;</span>':'')).join('')+'<div class="sec">Latihan</div>'+L('quiz','note','Pembahasan Kuis')+L('lab','flask','Lab Interaktif')+L('ujian','timer','Simulasi Ujian')+'<div class="sec">Review</div>'+L('kartu','cards','Flashcard')+L('ringkas','list','Ringkasan Cepat');
+  $$('#bottom a').forEach(a=>{const h=a.getAttribute('href').slice(1);a.classList.toggle('on',cur===h||(h==='materi'&&cur.startsWith('m/'))||(h==='lab'&&cur.startsWith('lab'))||(h==='ujian'&&cur==='ujian'))});
+  $('#miniBar').style.width=overall()+'%';
+}
+
+/* ---------- quiz engine ---------- */
+function qHTML(q,i,exam){return `<div class="q" data-id="${q.id}"><div class="qn">Soal ${i+1}</div><p class="qt">${q.q}</p>${q.code?code(q.code):''}<div>${q.o.map((o,j)=>`<button class="opt" data-j="${j}"><b>${'ABCD'[j]}</b><span>${o}</span></button>`).join('')}</div><div class="exp"></div></div>`}
+function paintQ(el,q,choice){
+  const bs=$$('.opt',el);bs.forEach((b,j)=>{b.disabled=true;if(j===q.a)b.classList.add('ok');else if(j===choice)b.classList.add('bad')});
+  const ex=$('.exp',el);ex.innerHTML=`<b>${choice===q.a?'Benar.':'Belum tepat.'}</b> ${q.e}`;ex.classList.add('show');
+}
+function bindQuiz(root,list){
+  $$('.q',root).forEach(el=>{
+    const q=list.find(x=>x.id===el.dataset.id);
+    if(S.ans[q.id]!==undefined)paintQ(el,q,S.ans[q.id]);
+    $$('.opt',el).forEach(b=>b.onclick=()=>{if(S.ans[q.id]!==undefined)return;S.ans[q.id]=+b.dataset.j;save();paintQ(el,q,+b.dataset.j);nav();upd()});
+  });
+}
+let upd=()=>{};
+
+/* ---------- ROUTES ---------- */
+const V=()=>$('#view');
+const R={
+home(){
+  const p=overall(),C=2*Math.PI*52,next=MODS.find(m=>!S.read[m.id])||MODS[0];
+  const best=S.exam.length?Math.max(...S.exam.map(e=>Math.round(e.s/e.t*100)))+'%':'-';
+  V().innerHTML=`
+  <div class="card hero"><div class="tx"><span class="pill">Close Book</span><h1>Siap ujian PBO</h1><p class="muted">Penjelasan detail, latihan soal interaktif, lab kode, dan simulasi ujian berdasarkan kisi-kisi dan kuis.</p><a class="btn" href="#m/${next.id}">${done()?'Lanjut belajar':'Mulai belajar'} &rarr;</a></div>
+  <div class="ring"><svg width="118" height="118"><circle cx="59" cy="59" r="52" fill="none" stroke="#262626" stroke-width="10"/><circle cx="59" cy="59" r="52" fill="none" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-o="${C*(1-p/100)}" id="rg" style="transition:stroke-dashoffset 1.2s var(--ease)"/></svg><b>${p}%</b></div></div>
+  <div class="grid"><div class="card stat"><b>${done()}/${MODS.length}</b><span>Materi selesai</span></div><div class="card stat"><b>${correct()}/${QB.length}</b><span>Soal benar</span></div><div class="card stat"><b>${best}</b><span>Skor ujian terbaik</span></div></div>
+  <h2>Kisi-kisi</h2>
+  <div class="card"><b>1. Konsep PBO</b>
+  <ul><li><a href="#m/m1">Class &amp; Object</a></li><li><a href="#m/m2">Method</a> (overload, override, static)</li><li><a href="#m/m3">Constructor</a></li><li><a href="#m/m4">Inheritance</a></li><li><a href="#m/m5">Encapsulation</a> (private, static, final)</li><li><a href="#m/m6">Dasar Java &amp; Identifier</a></li></ul>
+  <b>2. Pengembangan program sederhana</b><ul><li><a href="#m/m7">Merancang &amp; menelusuri program</a> (Book/EBook, Rekening)</li></ul>
+  <span class="pill">Sifat ujian: Close Book</span></div>
+  <h2>Mulai dari mana?</h2>
+  <div class="grid">
+  <a class="card tile" href="#materi"><div class="ic">${I('book')}</div><h3>Materi</h3><p>7 modul lengkap dengan contoh kode</p></a>
+  <a class="card tile" href="#quiz"><div class="ic">${I('note')}</div><h3>Pembahasan Kuis</h3><p>Jawaban kuis dikoreksi dan dijelaskan</p></a>
+  <a class="card tile" href="#lab"><div class="ic">${I('flask')}</div><h3>Lab Interaktif</h3><p>Klasifikasi, identifier, isi kode, tebak output</p></a>
+  <a class="card tile" href="#ujian"><div class="ic">${I('timer')}</div><h3>Simulasi Ujian</h3><p>Soal acak dengan timer dan skor</p></a></div>`;
+},
+materi(){
+  V().innerHTML=`<h1>Materi</h1><p class="muted">Urutan disarankan: 1 sampai 7. Tiap modul diakhiri latihan soal.</p><div class="grid">${MODS.map((m,i)=>`<a class="card tile" href="#m/${m.id}"><div class="ic">${I(m.ic)}</div><h3>${i+1}. ${m.t}</h3><p>${m.sum}</p><p style="margin-top:8px"><span class="pill">${m.min} menit</span><span class="pill">${QB.filter(q=>q.m===m.id).length} soal</span>${S.read[m.id]?'<span class="pill ok">Selesai</span>':''}</p></a>`).join('')}</div>`;
+},
+m(id){
+  const i=MODS.findIndex(x=>x.id===id);if(i<0)return R.materi();const m=MODS[i],qs=QB.filter(q=>q.m===id);
+  V().innerHTML=`<div class="crumb"><a href="#materi">Materi</a> / Modul ${i+1}</div><h1>${I(m.ic)} ${m.t}</h1><p class="muted">${m.sum}</p>${m.html()}
+  <h2>Latihan soal</h2><p class="muted">Pilih jawaban, penjelasan langsung muncul.</p><div id="qs">${qs.map((q,k)=>qHTML(q,k)).join('')}</div>
+  <div class="row"><button class="btn ghost sm" id="rs">Ulangi latihan</button><span class="muted" id="sc"></span></div>
+  <div class="row" style="margin-top:20px"><button class="btn" id="fin">${S.read[id]?'&#10003; Sudah selesai':'Tandai materi selesai'}</button></div>
+  <div class="nav2">${i>0?`<a class="btn ghost" href="#m/${MODS[i-1].id}">&larr; ${MODS[i-1].t}</a>`:'<span></span>'}${i<MODS.length-1?`<a class="btn" href="#m/${MODS[i+1].id}">${MODS[i+1].t} &rarr;</a>`:`<a class="btn" href="#ujian">Simulasi ujian &rarr;</a>`}</div>`;
+  const sc=()=>{$('#sc').textContent=`Benar ${qs.filter(q=>S.ans[q.id]===q.a).length} / ${qs.length}`};
+  upd=sc;sc();bindQuiz($('#qs'),qs);
+  $('#rs').onclick=()=>{qs.forEach(q=>delete S.ans[q.id]);save();R.m(id);nav()};
+  $('#fin').onclick=()=>{S.read[id]=!S.read[id];save();R.m(id);nav()};
+},
+quiz(){
+  const rows=[
+  ['1a','Baris 5, 6, 7: overload / override / error','Baris 5: Override. Baris 6: Overload. Baris 7: Error (tidak bisa dijalankan)','ok','Baris 5 Override, baris 6 Overload, baris 7 Error.','Jawaban benar. Perkuat alasan baris 7: signature <code>cetak(int)</code> sudah ada di class B (baris 5). Beda tipe kembali (<code>int</code> vs <code>void</code>) tidak membuat method baru, hasilnya compile error "already defined". Baris 5 override karena signature sama dengan method di A, baris 6 overload karena parameter String.'],
+  ['1b','Benar/Salah: subclass mewarisi atribut private dan bisa mengakses dengan this.namaAtribut','Salah, karena private hanya bisa dijalankan di class yang sama, tidak bisa beda class','ok','Salah.','Jawaban benar. Rumusan lebih baik: <code>private</code> hanya terlihat di dalam class yang mendeklarasikannya (termasuk subclass tidak boleh). <code>this</code> tidak mengubah aturan akses. Akses lewat getter/setter atau jadikan <code>protected</code>.'],
+  ['1c','Mengapa <code>public static void reset() { this.score = 0; }</code> gagal compile?','Static dipanggil dari class, tidak perlu menggunakan this','ok','Method static tidak punya <code>this</code>.','Idenya benar. Lengkapi: method static milik class dan tidak terikat objek, jadi tidak ada objek <code>this</code>, dan <code>score</code> (field instance) tidak bisa diakses langsung. Solusi: hapus static, jadikan score static, atau kirim objek sebagai parameter.'],
+  ['1d','Lingkari semua identifier valid','Dilingkari: _setData, displayAll, $total, main (dan Class)','mid','_setData, displayAll, $total, Class, main','Himpunan benar ada lima: <code>_setData</code>, <code>displayAll</code>, <code>$total</code>, <code>Class</code> (C besar), <code>main</code>. Tidak valid: <code>get-Name</code> (minus), <code>1Print</code> (awalan angka), <code>class</code> huruf kecil (keyword), <code>nilai akhir</code> (spasi). Pastikan <code>Class</code> ikut dilingkari.'],
+  ['1e','Beda <code>private final int MAX = 100;</code> dan <code>private static final int MAX = 100;</code>','static: aksesnya Class.max. final saja: aksesnya object.max','mid','Salinan per objek vs satu salinan milik class.','Cara akses sudah benar. Tambahkan dimensi jumlah salinan (diminta soal): tanpa static, <b>setiap objek punya salinan sendiri</b>; dengan static, hanya <b>satu salinan bersama</b> milik class. Karena <code>private</code>, akses dari luar class tetap harus lewat getter.'],
+  ['2a-1','Isian (1) dan (2)','(1) final  (2) static','ok','(1) final  (2) static','Benar. ISBN tidak boleh berubah = <code>final</code>; totalBuku bersama = <code>static</code>.'],
+  ['2a-3','Isian (3): pages diisi melalui setter','this.pages = pages','bad','<code>setPages(pages);</code>','Syarat soal "melalui setter" artinya memanggil method setter. <code>this.pages = pages</code> melewati validasi sehingga -10 tersimpan dan pesan "Halaman tidak valid" tidak muncul.'],
+  ['2a-4','Isian (4)','totalBuku++','ok','<code>totalBuku++;</code>','Benar.'],
+  ['2a-5','Isian (5) dan (6)','(5) pages <= 0  (6) this.pages = pages','ok','(5) <code>pages &lt;= 0</code>  (6) <code>this.pages = pages;</code>','Benar.'],
+  ['2a-7','Isian (7): identifikasi field','public EBook(String isbn, String title ...','bad','<code>public EBook(String isbn, String title, int pages, double fileSize)</code>','Constructor EBook butuh empat parameter: tiga untuk diteruskan ke <code>super(isbn, title, pages)</code> dan satu <code>fileSize</code> untuk field sendiri. Pemanggilan di Main juga memberi 4 argumen.'],
+  ['2a-8','Isian (8)','super.showInfo()','ok','<code>super.showInfo();</code>','Benar.'],
+  ['2b','Output program Main','Judul: OOP Java<br>Ukuran File = 5.2 mb<br>Total: 1','bad','<pre class="code" style="margin:6px 0"><code>Halaman tidak valid\nJudul: OOP Java, Halaman: 1\nUkuran File: 5.2 MB\nTotal: 2</code></pre>','Tiga hal terlewat: (1) pesan <b>Halaman tidak valid</b> muncul saat constructor memanggil setPages(-10); (2) baris Judul memuat <b>", Halaman: 1"</b>; (3) <b>Total: 2</b> karena Book b dan EBook e sama-sama menjalankan <code>totalBuku++</code> di constructor Book. Teks harus persis, termasuk "MB" huruf besar dan titik dua.']
+  ];
+  const cls={ok:'Benar',mid:'Hampir',bad:'Perlu diperbaiki'};
+  V().innerHTML=`<h1>Pembahasan Kuis</h1><p class="muted">Jawaban pada lembar kuis dibandingkan dengan kunci. Hijau = benar, kuning = kurang lengkap, merah = salah.</p>`+rows.map(r=>`<div class="card"><div class="row"><span class="pill">${r[0]}</span><span class="st ${r[3]}">${cls[r[3]]}</span></div><p><b>${r[1]}</b></p><p class="muted">Jawabanmu: ${r[2]}</p><p><b>Kunci:</b> ${r[4]}</p><p>${r[5]}</p></div>`).join('')+`<div class="nav2"><a class="btn ghost" href="#m/m7">Pelajari studi kasus</a><a class="btn" href="#lab/fill">Latihan isi kode &rarr;</a></div>`;
+},
+lab(a){
+  if(a==='cls')return labCls();if(a==='id')return labId();if(a==='fill')return labFill();if(a==='trace')return labTrace();
+  V().innerHTML=`<h1>Lab Interaktif</h1><p class="muted">Latihan berbasis kasus nyata dari kuis. Semua bisa diulang.</p><div class="grid">
+  <a class="card tile" href="#lab/cls"><div class="ic">${I('split')}</div><h3>Overload / Override / Error</h3><p>9 potongan kode, tentukan jenisnya</p></a>
+  <a class="card tile" href="#lab/id"><div class="ic">${I('type')}</div><h3>Identifier Valid</h3><p>Pilih semua nama yang sah</p></a>
+  <a class="card tile" href="#lab/fill"><div class="ic">${I('pencil')}</div><h3>Lengkapi Kode</h3><p>8 bagian kosong Book &amp; EBook</p></a>
+  <a class="card tile" href="#lab/trace"><div class="ic">${I('search')}</div><h3>Tebak Output</h3><p>Telusuri program, tulis hasilnya</p></a></div>`;
+},
+ujian(){examStart()},
+kartu(){
+  let i=0,order=CARDS.map((_,k)=>k);
+  V().innerHTML=`<h1>Flashcard</h1><p class="muted">Ketuk kartu untuk membalik. Cocok untuk hafalan sebelum ujian close book.</p><div class="flash" id="fl"><div class="in"><div class="f f1" id="fq"></div><div class="f f2" id="fa"></div></div></div><div class="row" style="justify-content:space-between"><button class="btn ghost" id="pv">&larr;</button><span class="muted" id="fc"></span><button class="btn ghost" id="nx">&rarr;</button></div><div class="row" style="margin-top:14px"><button class="btn sm ghost" id="sh">Acak</button></div>`;
+  const draw=()=>{const c=CARDS[order[i]];$('#fl').classList.remove('flip');setTimeout(()=>{$('#fq').innerHTML=c[0];$('#fa').innerHTML=c[1]},150);$('#fc').textContent=`${i+1} / ${CARDS.length}`};
+  $('#fl').onclick=()=>$('#fl').classList.toggle('flip');
+  $('#nx').onclick=()=>{i=(i+1)%CARDS.length;draw()};$('#pv').onclick=()=>{i=(i-1+CARDS.length)%CARDS.length;draw()};
+  $('#sh').onclick=()=>{order=shuffle(order);i=0;draw()};draw();
+},
+ringkas(){
+  V().innerHTML=`<h1>Ringkasan Cepat</h1><p class="muted">Satu halaman untuk dibaca ulang sebelum ujian.</p>
+  <h2>Overload vs Override</h2>${tbl(['','Overload','Override'],[['Di mana','Class sama','Parent &amp; child'],['Signature','Beda','Sama'],['Dipilih','Compile time','Runtime'],['Cek cepat','Nama sama, parameter beda','@Override, akses &ge; parent']])}
+  <h2>Access modifier</h2>${tbl(['','Class','Package','Subclass','Luar'],[['private','Ya','-','-','-'],['default','Ya','Ya','-','-'],['protected','Ya','Ya','Ya','-'],['public','Ya','Ya','Ya','Ya']])}
+  <h2>static vs instance</h2>${tbl(['','static','instance'],[['Milik','Class','Objek'],['Salinan','1','Per objek'],['Akses','NamaClass.x','objek.x'],['this','Tidak ada','Ada']])}
+  <h2>final</h2><p>Variabel: sekali assign &middot; Method: tidak boleh di-override &middot; Class: tidak boleh di-extend &middot; <code>static final</code> = konstanta milik class.</p>
+  <h2>Constructor</h2><ul><li>Nama = class, tanpa return type.</li><li>Ada constructor buatan = default constructor hilang.</li><li><code>this(...)</code> / <code>super(...)</code> harus baris pertama.</li><li>Parent selesai dulu, baru anak.</li></ul>
+  <h2>Identifier</h2><p>Valid: huruf, angka (bukan awal), <code>_</code>, <code>$</code>. Tidak valid: awalan angka, spasi, minus, keyword. <code>Class</code> valid, <code>class</code> tidak.</p>
+  <h2>Template jawaban Benar/Salah</h2>${code(`Salah/Benar, karena [aturan Java].\nContoh: [kode singkat atau akibatnya].`)}
+  <h2>Template tabel jejak</h2>${code(`Langkah | variabel penting | cetak\n1       | totalBuku=1        | -\n2       | pages=1            | Halaman tidak valid`)}`;
+}
+};
+
+/* ---------- LABS ---------- */
+function labCls(){
+  const it=[
+  ['void cetak(int x) { }','Override','Signature sama dengan <code>cetak(int)</code> milik A.'],
+  ['void cetak(String s) { }','Overload','Nama sama, parameter beda (String).'],
+  ['int cetak(int y) { return y; }  // class B juga punya baris 1','Error','Signature <code>cetak(int)</code> sudah ada di class B. Tipe kembali bukan pembeda.'],
+  ['int cetak(int x) { return x; }  // anggap B tidak punya method lain','Error','Mencoba override tetapi tipe kembali int tidak kompatibel dengan void milik A.'],
+  ['void cetak(int x, int y) { }','Overload','Jumlah parameter berbeda.'],
+  ['private void cetak(int x) { }','Error','Override tidak boleh mempersempit akses (default menjadi private).'],
+  ['@Override void cetak(String s) { }','Error','@Override tetapi tidak ada <code>cetak(String)</code> di A, tidak ada yang ditimpa.'],
+  ['void cetak(double x) { }','Overload','Tipe parameter double berbeda dari int.'],
+  ['static void cetak(int x) { }','Error','Method static tidak boleh menyembunyikan method instance milik parent.']];
+  V().innerHTML=`<div class="crumb"><a href="#lab">Lab</a> / Klasifikasi</div><h1>Overload, Override, atau Error?</h1>${code(`class A {\n    void cetak(int x) { }\n}\nclass B extends A {\n    // baris yang diuji ada di bawah\n}`)}<div id="its">${it.map((x,i)=>`<div class="q" data-i="${i}"><div class="qn">Kasus ${i+1}</div>${code(x[0])}<div class="seg">${['Overload','Override','Error'].map(v=>`<button data-v="${v}">${v}</button>`).join('')}</div><div class="exp"></div></div>`).join('')}</div><div class="row"><span class="muted" id="sc"></span><button class="btn ghost sm" id="rs">Ulangi</button></div>`;
+  let ok=0,n=0;
+  $$('#its .q').forEach(el=>{const x=it[+el.dataset.i];$$('button',el).forEach(b=>b.onclick=()=>{if(el.dataset.d)return;el.dataset.d=1;n++;const c=b.dataset.v===x[1];if(c)ok++;b.classList.add(c?'ok':'bad');if(!c)$$('button',el).find(z=>z.dataset.v===x[1]).classList.add('ok');const e=$('.exp',el);e.innerHTML=`<b>${x[1]}.</b> ${x[2]}`;e.classList.add('show');$('#sc').textContent=`Benar ${ok} / ${n}`})});
+  $('#rs').onclick=labCls;
+}
+function labId(){
+  const T=[['get-Name',0,'Mengandung tanda minus.'],['_setData',1,'Boleh diawali underscore.'],['1Print',0,'Diawali angka.'],['displayAll',1,'Huruf saja, valid.'],['$total',1,'Tanda $ diizinkan.'],['class',0,'Keyword Java.'],['Class',1,'C besar berbeda dari keyword class.'],['main',1,'Bukan keyword.'],['nilai akhir',0,'Mengandung spasi.'],['my_var2',1,'Huruf, underscore, angka (bukan awal).'],['double',0,'Keyword tipe data.'],['2ndValue',0,'Diawali angka.'],['total#',0,'Simbol # tidak diizinkan.'],['Total',1,'Valid dan berbeda dari total.']];
+  V().innerHTML=`<div class="crumb"><a href="#lab">Lab</a> / Identifier</div><h1>Pilih semua identifier yang valid</h1><div class="chips" id="ch">${T.map((t,i)=>`<button class="chip" data-i="${i}">${t[0]}</button>`).join('')}</div><div class="row"><button class="btn" id="ck">Periksa</button><button class="btn ghost" id="rs">Ulangi</button></div><div id="res"></div>`;
+  $$('#ch .chip').forEach(c=>c.onclick=()=>{if(!c.dataset.d)c.classList.toggle('sel')});
+  $('#ck').onclick=()=>{let ok=0;$$('#ch .chip').forEach(c=>{const t=T[+c.dataset.i],s=c.classList.contains('sel');c.dataset.d=1;c.classList.remove('sel');const g=(s?1:0)===t[1];if(g)ok++;c.classList.add(g?'ok':'bad')});$('#res').innerHTML=`<div class="card"><b>Skor: ${ok} / ${T.length}</b>${tbl(['Token','Valid','Alasan'],T.map(t=>[`<code>${t[0]}</code>`,t[1]?'Ya':'Tidak',t[2]]))}</div>`};
+  $('#rs').onclick=labId;
+}
+function labFill(){
+  const src=`
+public class Book {
+    private ¦A¦ String isbn;      // (1) tidak boleh berubah
+    private String title;
+    private int pages;
+    private ¦B¦ int totalBuku = 0; // (2) milik bersama
+
+    public Book(String isbn, String title, int pages) {
+        this.isbn = isbn;
+        this.title = title;
+        ¦C¦;   // (3) pages lewat setter
+        ¦D¦;   // (4) tambah totalBuku
+    }
+    public void setPages(int pages) {
+        if (¦E¦) {   // (5) tidak valid
+            System.out.println("Halaman tidak valid");
+            this.pages = 1;
+        } else {
+            ¦F¦;   // (6) simpan nilai valid
+        }
+    }
+    public static int getTotalBuku() { return totalBuku; }
+    public void showInfo() {
+        System.out.println("Judul: " + title + ", Halaman: " + pages);
+    }
+}
+
+public class EBook extends Book {
+    private double fileSize;
+    public EBook(¦G¦) {   // (7) identifikasi field
+        super(isbn, title, pages);
+        this.fileSize = fileSize;
+    }
+    @Override
+    public void showInfo() {
+        ¦H¦;   // (8) info dari Book
+        System.out.println("Ukuran File: " + fileSize + " MB");
+    }
+}`;
+  const K={A:[/^final$/,'final'],B:[/^static$/,'static'],C:[/^(this\.)?setpages\(pages\)$/,'setPages(pages)'],D:[/^(book\.)?(totalbuku\+\+|\+\+totalbuku|totalbuku\+=1|totalbuku=totalbuku\+1)$/,'totalBuku++'],E:[/^(pages<=0|pages<1|0>=pages)$/,'pages <= 0'],F:[/^this\.pages=pages$/,'this.pages = pages'],G:[/^stringisbn,stringtitle,intpages,doublefilesize$/,'String isbn, String title, int pages, double fileSize'],H:[/^super\.showinfo\(\)$/,'super.showInfo()']};
+  const W={A:7,B:7,C:16,D:16,E:12,F:20,G:38,H:18};
+  const html=hl(src).replace(/¦([A-H])¦/g,(m,k)=>`<input class="blank" data-k="${k}" style="width:${W[k]}ch" autocapitalize="off" autocomplete="off" spellcheck="false">`);
+  V().innerHTML=`<div class="crumb"><a href="#lab">Lab</a> / Lengkapi kode</div><h1>Lengkapi Book &amp; EBook</h1><p class="muted">Isi 8 bagian kosong sesuai komentar. Spasi dan titik koma di akhir tidak berpengaruh.</p><pre class="code"><code>${html}</code></pre><div class="row"><button class="btn" id="ck">Periksa</button><button class="btn ghost" id="ky">Lihat kunci</button><button class="btn ghost" id="rs">Reset</button></div><div id="res"></div>`;
+  const norm=s=>s.toLowerCase().replace(/\s+/g,'').replace(/;$/,'');
+  $('#ck').onclick=()=>{let ok=0;$$('.blank').forEach(b=>{const g=K[b.dataset.k][0].test(norm(b.value));b.classList.remove('ok','bad');b.classList.add(g?'ok':'bad');if(g)ok++});$('#res').innerHTML=`<div class="card"><b>Benar ${ok} / 8</b><p class="muted">${ok===8?'Sempurna.':'Merah = perlu diperbaiki. Tekan Lihat kunci untuk jawaban.'}</p></div>`};
+  $('#ky').onclick=()=>{$('#res').innerHTML=`<div class="card">${tbl(['No','Jawaban'],'ABCDEFGH'.split('').map((k,i)=>[i+1,`<code>${esc(K[k][1])}</code>`]))}<p>Catatan: (3) memakai setter agar validasi jalan. (7) harus memuat 4 parameter karena <code>super(isbn, title, pages)</code> dan <code>fileSize</code> sama-sama dipakai.</p></div>`};
+  $('#rs').onclick=labFill;
+}
+function labTrace(){
+  const T=[
+  {t:'Tebak output 1 (kuis)',code:`Book b = new Book("978-1", "Dasar Java", 200);\nEBook e = new EBook("978-2", "OOP Java", -10, 5.2);\ne.showInfo();\nSystem.out.println("Total: " + Book.getTotalBuku());`,note:'Memakai class Book &amp; EBook versi lengkap dari kuis (modul 7).',exp:['Halaman tidak valid','Judul: OOP Java, Halaman: 1','Ukuran File: 5.2 MB','Total: 2'],why:'setPages(-10) mencetak pesan dan mengisi 1. showInfo EBook memanggil super.showInfo() lebih dulu. Dua objek dibuat sehingga totalBuku = 2.'},
+  {t:'Tebak output 2',code:`class Hewan {\n    Hewan() { System.out.println("Hewan lahir"); }\n    void suara() { System.out.println("..."); }\n}\nclass Kucing extends Hewan {\n    Kucing() { System.out.println("Kucing lahir"); }\n    @Override void suara() {\n        super.suara();\n        System.out.println("Meow");\n    }\n}\n// main\nHewan h = new Kucing();\nh.suara();`,note:'',exp:['Hewan lahir','Kucing lahir','...','Meow'],why:'Constructor parent jalan dulu, lalu constructor anak. h.suara() memakai versi Kucing (polymorphism) yang memanggil super.suara() lalu mencetak Meow.'},
+  {t:'Tebak output 3',code:`class Item {\n    static int n = 0;\n    int id;\n    Item() { n++; id = n; }\n}\n// main\nItem a = new Item();\nItem b = new Item();\nItem c = new Item();\nSystem.out.println(a.id + " " + b.id + " " + c.id);\nSystem.out.println(Item.n);`,note:'',exp:['1 2 3','3'],why:'n static dibagi semua objek dan naik tiap constructor. id menyalin nilai n saat itu: 1, 2, 3. Akhirnya n = 3.'}];
+  V().innerHTML=`<div class="crumb"><a href="#lab">Lab</a> / Tebak output</div><h1>Tebak Output</h1><p class="muted">Tulis hasil cetak, satu baris per baris output. Huruf besar-kecil dan spasi dihitung.</p>`+T.map((x,i)=>`<div class="card" data-i="${i}"><b>${x.t}</b>${x.note?`<p class="muted">${x.note}</p>`:''}${code(x.code)}<textarea placeholder="Tulis output di sini"></textarea><div class="row" style="margin-top:10px"><button class="btn sm ck">Periksa</button><button class="btn sm ghost sh">Lihat jawaban</button></div><div class="out"></div></div>`).join('');
+  $$('.card[data-i]').forEach(c=>{const x=T[+c.dataset.i];
+    $('.ck',c).onclick=()=>{const g=$('textarea',c).value.split('\n').map(s=>s.trim()).filter(s=>s!=='');let ok=0;const rows=x.exp.map((e,k)=>{const r=g[k]===e;if(r)ok++;return `<li class="${r?'st ok':'st bad'}">${r?'Benar':'Salah'}: <code>${esc(g[k]||'(kosong)')}</code>${r?'':' &rarr; seharusnya <code>'+esc(e)+'</code>'}</li>`}).join('');const extra=g.length>x.exp.length?'<li class="st bad">Ada baris berlebih.</li>':'';$('.out',c).innerHTML=`<div class="exp show"><b>${ok} / ${x.exp.length} baris benar</b><ul>${rows}${extra}</ul><p>${x.why}</p></div>`};
+    $('.sh',c).onclick=()=>{$('.out',c).innerHTML=`<div class="exp show"><pre class="code"><code>${esc(x.exp.join('\n'))}</code></pre><p>${x.why}</p></div>`};
+  });
+}
+
+/* ---------- UJIAN ---------- */
+let E=null;
+function examStart(){
+  clearInterval(timer);
+  const hist=S.exam.slice(-5).reverse();
+  V().innerHTML=`<h1>Simulasi Ujian</h1><p class="muted">Soal diacak dari seluruh modul. Tanpa petunjuk selama ujian, penjelasan muncul di akhir. Waktu: 90 detik per soal.</p>
+  <div class="card"><b>Pilih jumlah soal</b><div class="seg" id="cnt">${[10,15,20].map(n=>`<button data-n="${n}">${n} soal</button>`).join('')}<button data-n="${QB.length}">Semua (${QB.length})</button></div></div>
+  ${hist.length?`<h3>Riwayat terakhir</h3><div class="card">${tbl(['Tanggal','Soal','Skor'],hist.map(h=>[h.d,h.t,`${h.s}/${h.t} (${Math.round(h.s/h.t*100)}%)`]))}</div>`:''}`;
+  $$('#cnt button').forEach(b=>b.onclick=()=>{const n=+b.dataset.n;E={list:shuffle(QB).slice(0,n),i:0,a:{},end:Date.now()+n*90000};examRun()});
+}
+function examRun(){
+  clearInterval(timer);
+  const q=E.list[E.i],n=E.list.length;
+  V().innerHTML=`<div class="row" style="justify-content:space-between"><b>Soal ${E.i+1} / ${n}</b><span class="timer" id="tm"></span></div>
+  <div class="nums">${E.list.map((_,k)=>`<button data-k="${k}" class="${k===E.i?'cur':E.a[k]!==undefined?'done':''}">${k+1}</button>`).join('')}</div>
+  <div class="q"><p class="qt">${q.q}</p>${q.code?code(q.code):''}<div>${q.o.map((o,j)=>`<button class="opt ${E.a[E.i]===j?'sel':''}" data-j="${j}"><b>${'ABCD'[j]}</b><span>${o}</span></button>`).join('')}</div></div>
+  <div class="nav2"><button class="btn ghost" id="pv" ${E.i===0?'disabled style="opacity:.4"':''}>&larr; Sebelumnya</button>${E.i<n-1?'<button class="btn" id="nx">Berikutnya &rarr;</button>':'<button class="btn" id="fn">Selesai &amp; nilai</button>'}</div>
+  <p class="muted" style="margin-top:14px">Terjawab ${Object.keys(E.a).length} / ${n}</p>`;
+  const tick=()=>{const s=Math.max(0,Math.round((E.end-Date.now())/1000));$('#tm').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');if(s<=0){clearInterval(timer);examEnd()}};tick();timer=setInterval(tick,1000);
+  $$('.opt').forEach(b=>b.onclick=()=>{E.a[E.i]=+b.dataset.j;examRun()});
+  $$('.nums button').forEach(b=>b.onclick=()=>{E.i=+b.dataset.k;examRun()});
+  if($('#pv'))$('#pv').onclick=()=>{if(E.i>0){E.i--;examRun()}};
+  if($('#nx'))$('#nx').onclick=()=>{E.i++;examRun()};
+  if($('#fn'))$('#fn').onclick=()=>{const left=E.list.length-Object.keys(E.a).length;if(left&&!confirm(left+' soal belum dijawab. Tetap selesai?'))return;examEnd()};
+}
+function examEnd(){
+  clearInterval(timer);if(!E)return;
+  let s=0;const per={};E.list.forEach((q,k)=>{const c=E.a[k]===q.a;if(c)s++;per[q.m]=per[q.m]||[0,0];per[q.m][1]++;if(c)per[q.m][0]++});
+  const t=E.list.length,pc=Math.round(s/t*100);
+  S.exam.push({s,t,d:new Date().toLocaleDateString('id-ID')});S.exam=S.exam.slice(-20);save();nav();
+  const msg=pc>=80?'Sangat siap.':pc>=60?'Cukup baik, perkuat modul yang merah.':'Ulangi materi lalu coba lagi.';
+  V().innerHTML=`<div class="card hero"><div class="tx"><h1>Skor ${s} / ${t}</h1><p>${pc}% &middot; ${msg}</p></div></div>
+  <h3>Per modul</h3><div class="card">${tbl(['Modul','Benar'],Object.keys(per).map(m=>{const md=MODS.find(x=>x.id===m);return [`<a href="#m/${m}">${md.t}</a>`,`${per[m][0]} / ${per[m][1]}`]}))}</div>
+  <h3>Review jawaban</h3>${E.list.map((q,k)=>{const c=E.a[k]===q.a;return `<div class="q"><div class="qn">Soal ${k+1} &middot; <span class="st ${c?'ok':'bad'}">${c?'Benar':'Salah'}</span></div><p class="qt">${q.q}</p>${q.code?code(q.code):''}<p>${E.a[k]!==undefined?`Jawabanmu: <b>${'ABCD'[E.a[k]]}</b>. `:'Tidak dijawab. '}Kunci: <b>${'ABCD'[q.a]}</b> &ndash; ${q.o[q.a]}</p><div class="exp show">${q.e}</div></div>`}).join('')}
+  <div class="nav2"><button class="btn ghost" id="ag">Ujian lagi</button><a class="btn" href="#home">Beranda</a></div>`;
+  $('#ag').onclick=examStart;E=null;
+}
+
+/* ---------- router ---------- */
+function route(){
+  clearInterval(timer);upd=()=>{};
+  const h=location.hash.slice(1)||'home',[p,a]=h.split('/');
+  const f=R[p]||R.home;f(a);stag();
+  const names={home:'Beranda',materi:'Materi',quiz:'Pembahasan Kuis',lab:'Lab Interaktif',ujian:'Simulasi Ujian',kartu:'Flashcard',ringkas:'Ringkasan'};
+  let t=names[p]||'Beranda';if(p==='m'){const m=MODS.find(x=>x.id===a);if(m)t=m.t}
+  $('#ttl').textContent=t;document.title=t+' | PBO Belajar';
+  nav();window.scrollTo({top:0});document.getElementById('app').classList.remove('open');
+}
+window.addEventListener('hashchange',route);
+$('#menuBtn').onclick=()=>$('#app').classList.toggle('open');
+$('#scrim').onclick=()=>$('#app').classList.remove('open');
+function stag(){const v=V();v.classList.remove('stag');void v.offsetWidth;v.classList.add('stag');[...v.children].forEach((e,i)=>e.style.setProperty('--n',Math.min(i,9)));clearTimeout(window._st);window._st=setTimeout(()=>v.classList.remove('stag'),1400);const rg=$('#rg');if(rg)requestAnimationFrame(()=>requestAnimationFrame(()=>{rg.style.strokeDashoffset=rg.dataset.o}))}
+(function(){const sp=$('#splash');let gone=false;const hide=()=>{if(gone)return;gone=true;sp.classList.add('out');setTimeout(()=>sp.remove(),1000)};const t0=Date.now();window.addEventListener('load',()=>setTimeout(hide,Math.max(0,5600-(Date.now()-t0))));sp.onclick=hide;setTimeout(hide,7500)})();
+route();
+</script>
+</body>
+</html>
